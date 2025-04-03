@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kardamon.UI", "Kardamon.UI\Kardamon.UI.csproj", "{A1958037-9499-4F8C-9810-CEF2C6BC3BB4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kardamon.Core", "Kardamon.Core\Kardamon.Core.csproj", "{808279EE-E2FF-40FF-8E9A-FDF00B6B13F1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A1958037-9499-4F8C-9810-CEF2C6BC3BB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1958037-9499-4F8C-9810-CEF2C6BC3BB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1958037-9499-4F8C-9810-CEF2C6BC3BB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1958037-9499-4F8C-9810-CEF2C6BC3BB4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{808279EE-E2FF-40FF-8E9A-FDF00B6B13F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{808279EE-E2FF-40FF-8E9A-FDF00B6B13F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{808279EE-E2FF-40FF-8E9A-FDF00B6B13F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{808279EE-E2FF-40FF-8E9A-FDF00B6B13F1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
