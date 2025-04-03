@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Kardamon.Core;
 
 namespace Kardamon.UI
 {
@@ -9,16 +10,21 @@ namespace Kardamon.UI
         public override void Initialize()
         {
             AvaloniaXamlLoader.Load(this);
+
+            IoC.Build();
         }
 
         public override void OnFrameworkInitializationCompleted()
         {
+            var model = IoC.Resolve<MainWindowViewModel>();
+            model.Init();
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                desktop.MainWindow = new MainWindow();
+                desktop.MainWindow = new MainWindow() { DataContext = model };
             }
 
             base.OnFrameworkInitializationCompleted();
         }
     }
+
 }
