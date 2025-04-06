@@ -1,194 +1,121 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"		xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"        xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"        xmlns:iac="clr-namespace:Avalonia.Xaml.Interactions.Custom;assembly=Avalonia.Xaml.Interactions"        xmlns:controls="using:Kardamon.UI.Controls"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+        xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
+        xmlns:iac="clr-namespace:Avalonia.Xaml.Interactions.Custom;assembly=Avalonia.Xaml.Interactions"
+        
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Kardamon.UI.MainWindow"
+        
         Title="Kardamon.UI"
 		FontSize="10">
+	<Window.Styles>
+		<Style Selector="Button.toolbarButton">
+			<Setter Property="Background" Value="Transparent" />
+			<Setter Property="Width" Value="48" />
+			<Setter Property="Height" Value="48" />
+			<Setter Property="Template">
+				<ControlTemplate>
+					<ContentPresenter Background="{TemplateBinding Background}" Content="{TemplateBinding Content}"/>
+				</ControlTemplate>
+			</Setter>
+		</Style>
+		<Style Selector="Button.toolbarButton Svg">
+			<Setter Property="(Svg.Css)" Value="path {fill: DarkGreen}"></Setter>
+			<Setter Property="Width" Value="24"></Setter>
+		</Style>
+		<Style Selector="Button.toolbarButton:pointerover">
+			<Setter Property="Background" Value="DarkGreen" />
+		</Style>
+		<Style Selector="Button.toolbarButton:pointerover Svg">
+			<Setter Property="(Svg.Css)" Value="path {fill: #FFF}"></Setter>
+		</Style>
+		
+		<Style Selector="ToggleButton.toolbarButton">
+			<Setter Property="Background" Value="Transparent" />
+			<Setter Property="Width" Value="48" />
+			<Setter Property="Height" Value="48" />
+			<Setter Property="Template">
+				<ControlTemplate>
+					<ContentPresenter Background="{TemplateBinding Background}" Content="{TemplateBinding Content}"/>
+				</ControlTemplate>
+			</Setter>
+		</Style>
+		<Style Selector="ToggleButton.toolbarButton Svg">
+			<Setter Property="(Svg.Css)" Value="path {fill: DarkGreen}"></Setter>
+			<Setter Property="Width" Value="24"></Setter>
+		</Style>
+		<Style Selector="ToggleButton.toolbarButton:pointerover">
+			<Setter Property="Background" Value="DarkGreen" />
+		</Style>
+		<Style Selector="ToggleButton.toolbarButton:checked">
+			<Setter Property="Background" Value="Green" />
+		</Style>
+		<Style Selector="ToggleButton.toolbarButton:checked Svg">
+			<Setter Property="(Svg.Css)" Value="path {fill: #FFF}"></Setter>
+		</Style>
+		<Style Selector="ToggleButton.toolbarButton:pointerover Svg">
+			<Setter Property="(Svg.Css)" Value="path {fill: #FFF}"></Setter>
+		</Style>
+	</Window.Styles>
 	<DockPanel LastChildFill="True">
-		<controls:SideMenu Width="210" IsVisible="{Binding #expandMenuButton.IsChecked}"/>
-		<Border Height="30"
-				DockPanel.Dock="Top">
-			<DockPanel LastChildFill="True">
-				<Border Width="210"
-						Background="DarkGreen"
-						IsVisible="{Binding PlayerService.CurrentMedia, Converter={x:Static ObjectConverters.IsNotNull}}"
-						DockPanel.Dock="Right"
-						TextBlock.Foreground="#FFFFFF">
-					<StackPanel Spacing="2">
-						<TextBlock FontWeight="Bold" Text="Buffering..." IsVisible="{Binding PlayerService.Buffering}"/>
-						<TextBlock FontWeight="Bold" Text="{Binding PlayerService.CurrentMedia.Title}" IsVisible="{Binding !PlayerService.Buffering}"/>
-						<TextBlock Text="{Binding PlayerService.CurrentMedia.Artist}" IsVisible="{Binding !PlayerService.Buffering}"/>
-					</StackPanel>
-				</Border>
-				<TextBlock DockPanel.Dock="Top"
-				   FontSize="20"
-						   TextAlignment="Right"
-				   FontWeight="Light"
-				   Margin="0,0,10,0"
-						   Foreground="#20000000"
-						   
-				   IsVisible="{Binding IsLoading}"
-				   Text="Loading..."></TextBlock>
-			</DockPanel>
+		<Border Width="220"
+		        IsVisible="{Binding #tb_openMenu.IsChecked}"
+		        Background="#000000"
+		        Padding="0,0,0,0">
+			<StackPanel Spacing="5">
+				<StackPanel.Styles>
+					
+				</StackPanel.Styles>
+				<ToggleButton Classes="toolbarButton"
+				              HorizontalAlignment="Left"
+				              IsChecked="{Binding #tb_openMenu.IsChecked}">
+					<Svg 
+						Path="Assets/menu.svg"/>
+				</ToggleButton>
+			</StackPanel>
 		</Border>
-		<StackPanel DockPanel.Dock="Top"
-					Orientation="Horizontal"
-					Margin="0,0,0,0">
-			<ToggleButton FontFamily="Segoe UI Symbol"
-						  Margin="14,0,14,8"
-						  Name="expandMenuButton"
-		Content="">
-				<ToggleButton.Styles>
-					<Style Selector="ToggleButton">
-						<Setter Property="Foreground" Value="#000000"></Setter>
-					</Style>
-					<Style Selector="ToggleButton:pointerover">
-						<Setter Property="Foreground" Value="DarkGreen"></Setter>
-					</Style>
-					<Style Selector="ToggleButton:pressed">
-						<Setter Property="RenderTransform" Value="scale(1)"></Setter>
-					</Style>
-					<Style Selector="ToggleButton:checked">
-						<Setter Property="Foreground" Value="Green"></Setter>
-					</Style>
-				</ToggleButton.Styles>
-				<ToggleButton.Template>
-					<ControlTemplate>
-						<Border Height="40"
-								Width="40">
-							<TextBlock VerticalAlignment="Center"
-									   TextAlignment="Center"
-									   FontSize="24"
-								   
-									   Text="{TemplateBinding Content}"
-								   />
-						</Border>
-					</ControlTemplate>
-				</ToggleButton.Template>
-			</ToggleButton>
-
-			<TextBlock 
-				   FontSize="42"
-				   FontWeight="Light"
-				   Margin="0,0,20,5"
-				   Text="{Binding CurrentPage.Name}"></TextBlock>
-		</StackPanel>
-		<TextBox MinHeight="2"
-				 Height="20"
-				 Margin="0,0,40,0"
-				 Padding="2"
-				 Width="280"
-				 DockPanel.Dock="Top"
-				 HorizontalAlignment="Right"
-				 BorderBrush="#000000"
-				 VerticalContentAlignment="Center"
-				 CornerRadius="0"
-				 FontSize="10"
-				 Watermark="Search by">
-			<TextBox.InnerRightContent>
-				<Button 
-						FontSize="18"
-						Padding="0,-5,0,0"
-						Background="Transparent" 
-						FontFamily="Segoe UI Symbol"></Button>
-			</TextBox.InnerRightContent>
-		</TextBox>
-		<Grid DataContext="{Binding CurrentPage}"
-			  Margin="20">
-			<DockPanel LastChildFill="True">
-				<ListBox Items="{Binding Groups}"
-						 SelectedItem="{Binding Group}"
-						 DockPanel.Dock="Top"
-						 Background="Transparent"
-						 BorderThickness="0"
-						 FontSize="24">
-					<ListBox.ItemsPanel>
-						<ItemsPanelTemplate>
-							<VirtualizingStackPanel Orientation="Horizontal"
-													Spacing="30"></VirtualizingStackPanel>
-						</ItemsPanelTemplate>
-					</ListBox.ItemsPanel>
-					<ListBox.Styles>
-						<Style Selector="ListBoxItem">
-							<Setter Property="Foreground" Value="#20000000"/>
-							<Setter Property="Template">
-								<ControlTemplate>
-									<TextBlock Text="{Binding Name}"/>
-								</ControlTemplate>
-							</Setter>
-						</Style>
-						<Style Selector="ListBoxItem:pointerover">
-							<Setter Property="Foreground" Value="#50000000"/>
-						</Style>
-						<Style Selector="ListBoxItem:selected">
-							<Setter Property="Foreground" Value="Green"/>
-						</Style>
-					</ListBox.Styles>
-				</ListBox>
-				<ContentControl Content="{Binding Group}">
-					<ContentControl.ContentTemplate>
-						<DataTemplate>
-							<ScrollViewer HorizontalScrollBarVisibility="Disabled"
-										  Margin="20">
-								<ItemsControl Items="{Binding Items}"
-											  FontSize="11">
-									<ItemsControl.Styles>
-										<Style Selector="Button:nth-child(2n+2)">
-											<Setter Property="Background" Value="#20000000"></Setter>
-										</Style>
-										<Style Selector="Button">
-											<Setter Property="Background" Value="Transparent"></Setter>
-										</Style>
-										<Style Selector="TextBlock">
-											<Setter Property="VerticalAlignment" Value="Center"></Setter>
-										</Style>
-									</ItemsControl.Styles>
-									<ItemsControl.ItemTemplate>
-										<DataTemplate>
-											<Button Command="{Binding $parent[Window].DataContext.PlayCommand}"
-													CommandParameter="{Binding .}"
-													Width="{Binding $parent[ContentPresenter].Bounds.Width}">
-												<Button.Template>
-													<ControlTemplate>
-														<DockPanel LastChildFill="True"
-													   Height="40">
-															<Border DockPanel.Dock="Left"
-																   Width="30"
-																	Height="30"
-																	Background="Green"
-																	Margin="20,0"
-																	>
-
-															</Border>
-															<TextBlock Text="{Binding Time}"
-																	   FontSize="10"
-																	   VerticalAlignment="Center"
-																	   Width="100"
-																	   Opacity="0.5"
-																	   DockPanel.Dock="Right"/>
-															<TextBlock Text="{Binding Artist}"
-																	   Opacity="0.5"
-																	   FontSize="10"
-																	   VerticalAlignment="Center"
-																	   Width="200"
-																	   DockPanel.Dock="Right"/>
-															<TextBlock Text="{Binding Title}"
-																	   
-																	   FontSize="10"/>
-														</DockPanel>
-													</ControlTemplate>
-												</Button.Template>
-											</Button>
-										</DataTemplate>
-									</ItemsControl.ItemTemplate>
-								</ItemsControl>
-							</ScrollViewer>
-						</DataTemplate>
-					</ContentControl.ContentTemplate>
-				</ContentControl>
-			</DockPanel>
-		</Grid>
+		<Border DockPanel.Dock="Top"
+		        Background="#FFF"
+		        Height="48">
+			<StackPanel Orientation="Horizontal"
+			            Spacing="8">
+				<ToggleButton Classes="toolbarButton"
+				              Name="tb_openMenu"
+				              IsVisible="{Binding !#tb_openMenu.IsChecked}">
+					<Svg 
+					     Path="Assets/menu.svg"/>
+				</ToggleButton>
+				<TextBlock Text="{Binding $parent[Window].Title}"
+				           VerticalAlignment="Center"
+				           FontSize="12"
+				           FontWeight="Bold"
+				           Margin="10,0"/>
+				<TextBlock Text="File"
+				           VerticalAlignment="Center"
+				           FontSize="12"
+				           Margin="10,0"/>
+				<TextBlock Text="Edit"
+				           VerticalAlignment="Center"
+				           FontSize="12"
+				           Margin="10,0"/>
+				<TextBlock Text="Control"
+				           VerticalAlignment="Center"
+				           FontSize="12"
+				           Margin="10,0"/>
+				<TextBlock Text="Help"
+				           VerticalAlignment="Center"
+				           FontSize="12"
+				           Margin="10,0"/>
+			</StackPanel>
+		</Border>
+		<Border DockPanel.Dock="Top"
+		        Background="#10000000"
+		        Height="48">
+			
+		</Border>
+		<Grid></Grid>
 	</DockPanel>
 </Window>

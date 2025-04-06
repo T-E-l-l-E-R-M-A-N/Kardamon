@@ -855,3 +855,5 @@ C:\Users\user\Source\Repos\T-E-l-l-E-R-M-A-N\Kardamon\src\Kardamon.Core\obj\Debu
 C:\Users\user\Source\Repos\T-E-l-l-E-R-M-A-N\Kardamon\src\Kardamon.Core\obj\Debug\net5.0\Kardamon.Core.dll
 C:\Users\user\Source\Repos\T-E-l-l-E-R-M-A-N\Kardamon\src\Kardamon.Core\obj\Debug\net5.0\ref\Kardamon.Core.dll
 C:\Users\user\Source\Repos\T-E-l-l-E-R-M-A-N\Kardamon\src\Kardamon.Core\obj\Debug\net5.0\Kardamon.Core.pdb
+C:\Users\user\source\repos\T-E-l-l-E-R-M-A-N\Kardamon\src\Kardamon.Core\obj\Debug\net5.0\Kardamon.Core.csproj.AssemblyReference.cache
+C:\Users\user\source\repos\T-E-l-l-E-R-M-A-N\Kardamon\src\Kardamon.Core\obj\Debug\net5.0\Avalonia\Resources.Inputs.cache

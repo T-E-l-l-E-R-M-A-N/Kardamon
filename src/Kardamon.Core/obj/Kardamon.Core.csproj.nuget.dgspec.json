@@ -1,27 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\user\\Source\\Repos\\T-E-l-l-E-R-M-A-N\\Kardamon\\src\\Kardamon.Core\\Kardamon.Core.csproj": {}
+    "C:\\Users\\user\\source\\repos\\T-E-l-l-E-R-M-A-N\\Kardamon\\src\\Kardamon.Core\\Kardamon.Core.csproj": {}
   },
   "projects": {
-    "C:\\Users\\user\\Source\\Repos\\T-E-l-l-E-R-M-A-N\\Kardamon\\src\\Kardamon.Core\\Kardamon.Core.csproj": {
+    "C:\\Users\\user\\source\\repos\\T-E-l-l-E-R-M-A-N\\Kardamon\\src\\Kardamon.Core\\Kardamon.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\user\\Source\\Repos\\T-E-l-l-E-R-M-A-N\\Kardamon\\src\\Kardamon.Core\\Kardamon.Core.csproj",
+        "projectUniqueName": "C:\\Users\\user\\source\\repos\\T-E-l-l-E-R-M-A-N\\Kardamon\\src\\Kardamon.Core\\Kardamon.Core.csproj",
         "projectName": "Kardamon.Core",
-        "projectPath": "C:\\Users\\user\\Source\\Repos\\T-E-l-l-E-R-M-A-N\\Kardamon\\src\\Kardamon.Core\\Kardamon.Core.csproj",
+        "projectPath": "C:\\Users\\user\\source\\repos\\T-E-l-l-E-R-M-A-N\\Kardamon\\src\\Kardamon.Core\\Kardamon.Core.csproj",
         "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\user\\Source\\Repos\\T-E-l-l-E-R-M-A-N\\Kardamon\\src\\Kardamon.Core\\obj\\",
+        "outputPath": "C:\\Users\\user\\source\\repos\\T-E-l-l-E-R-M-A-N\\Kardamon\\src\\Kardamon.Core\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net5.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -43,6 +41,10 @@
             "AngleSharp": {
               "target": "Package",
               "version": "[1.2.0, )"
+            },
+            "Avalonia.Svg": {
+              "target": "Package",
+              "version": "[11.2.0.2, )"
             },
             "LibVLCSharp": {
               "target": "Package",
