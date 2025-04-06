@@ -24,6 +24,7 @@ namespace Kardamon.Core
             var list = new List<AudioModel>();
             foreach(var li in lis)
             {
+                var track__img = li.QuerySelector(".track__img");
                 var track_info_l = li.QuerySelector(".track__info-l");
                 var track__title = track_info_l.QuerySelector(".track__title");
                 var track__desc = track_info_l.QuerySelector(".track__desc");
@@ -31,18 +32,24 @@ namespace Kardamon.Core
                 var track__info_r = li.QuerySelector(".track__info-r");
                 var a = track__info_r.QuerySelector("a");
                 var track__like_btn = track__info_r.QuerySelector(".track__like-btn");
+                var track__fulltime = track__info_r.QuerySelector(".track__fulltime");
 
                 int id = Convert.ToInt32(track__like_btn.GetAttribute("data-track-id"));
+                string image = track__img.GetAttribute("style").Replace("background-image: url('", "")
+                    .Replace("');", "");
                 string source = a.GetAttribute("href");
                 string title = track__title.TextContent
                     .Replace("\n                                                    ", "")
                     .Replace("\n                                            ", "");
                 string artist = track__desc.TextContent;
+                string time = TimeSpan.Parse("00:" + track__fulltime.TextContent).ToString("m\\:ss");
                 var audioModel = new AudioModel(id, $"{artist} - {title}")
                 {
                     Source = source,
                     Title = title,
-                    Artist = artist
+                    Artist = artist,
+                    Time = time,
+                    Image = image
                 };
                 list.Add(audioModel);
 
@@ -59,6 +66,7 @@ namespace Kardamon.Core
             var list = new List<AudioModel>();
             foreach (var li in lis)
             {
+                var track__img = li.QuerySelector(".track__img");
                 var track_info_l = li.QuerySelector(".track__info-l");
                 var track__title = track_info_l.QuerySelector(".track__title");
                 var track__desc = track_info_l.QuerySelector(".track__desc");
@@ -66,18 +74,24 @@ namespace Kardamon.Core
                 var track__info_r = li.QuerySelector(".track__info-r");
                 var a = track__info_r.QuerySelector("a");
                 var track__like_btn = track__info_r.QuerySelector(".track__like-btn");
+                var track__fulltime = track__info_r.QuerySelector(".track__fulltime");
 
                 int id = Convert.ToInt32(track__like_btn.GetAttribute("data-track-id"));
+                string image = track__img.GetAttribute("style").Replace("background-image: url('", "")
+                    .Replace("');", "");
                 string source = a.GetAttribute("href");
                 string title = track__title.TextContent
                     .Replace("\n                                                    ", "")
                     .Replace("\n                                            ", "");
                 string artist = track__desc.TextContent;
+                string time = TimeSpan.Parse("00:" + track__fulltime.TextContent).ToString("m\\:ss");
                 var audioModel = new AudioModel(id, $"{artist} - {title}")
                 {
                     Source = source,
                     Title = title,
-                    Artist = artist
+                    Artist = artist,
+                    Time = time,
+                    Image = image
                 };
                 list.Add(audioModel);
 

@@ -1,4 +1,6 @@
 ﻿using System.Collections.ObjectModel;
+using Kardamon.Core.ViewModels.Pages;
+using Kardamon.Core.ViewModels.Windows;
 
 namespace Kardamon.Core
 {

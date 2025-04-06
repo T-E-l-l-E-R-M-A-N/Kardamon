@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Kardamon.Core.ViewModels.Pages;
 
 namespace Kardamon.Core
 {

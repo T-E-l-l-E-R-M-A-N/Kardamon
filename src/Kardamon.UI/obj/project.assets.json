@@ -18,6 +18,18 @@
           }
         }
       },
+      "AsyncImageLoader.Avalonia/3.3.0": {
+        "type": "package",
+        "dependencies": {
+          "Avalonia": "11.0.0"
+        },
+        "compile": {
+          "lib/netstandard2.1/AsyncImageLoader.Avalonia.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.1/AsyncImageLoader.Avalonia.dll": {}
+        }
+      },
       "Avalonia/11.2.6": {
         "type": "package",
         "dependencies": {
@@ -271,6 +283,20 @@
           "lib/netstandard2.0/Avalonia.Skia.dll": {
             "related": ".xml"
           }
+        }
+      },
+      "Avalonia.SKPictureImage/0.10.6.1": {
+        "type": "package",
+        "dependencies": {
+          "Avalonia": "0.10.6",
+          "Avalonia.Skia": "0.10.6",
+          "SkiaSharp": "2.80.2"
+        },
+        "compile": {
+          "lib/net5.0/Avalonia.SKPictureImage.dll": {}
+        },
+        "runtime": {
+          "lib/net5.0/Avalonia.SKPictureImage.dll": {}
         }
       },
       "Avalonia.Svg/11.2.0.2": {
@@ -1062,6 +1088,20 @@
         "logo.png"
       ]
     },
+    "AsyncImageLoader.Avalonia/3.3.0": {
+      "sha512": "pC9dRCCuD6WO3NAX0fCxgCliYVDsdOGdxJDw7RXbHR1AW19XpAuiLSsXNkXMYCb1+qzjYuq44ZZlBssxZIKCBg==",
+      "type": "package",
+      "path": "asyncimageloader.avalonia/3.3.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "asyncimageloader.avalonia.3.3.0.nupkg.sha512",
+        "asyncimageloader.avalonia.nuspec",
+        "lib/netstandard2.0/AsyncImageLoader.Avalonia.dll",
+        "lib/netstandard2.1/AsyncImageLoader.Avalonia.dll"
+      ]
+    },
     "Avalonia/11.2.6": {
       "sha512": "Z92CH5hMnI/gAWgNC4fyK07YRN33jpP9DS39cjii4pXXzaOhjNEKopecGZjcjZaAzeFPJWI6+UKnXFe2wf0ovA==",
       "type": "package",
@@ -1408,6 +1448,22 @@
         "lib/net8.0/Avalonia.Skia.xml",
         "lib/netstandard2.0/Avalonia.Skia.dll",
         "lib/netstandard2.0/Avalonia.Skia.xml"
+      ]
+    },
+    "Avalonia.SKPictureImage/0.10.6.1": {
+      "sha512": "wh4n1C0ln/n/V1AeIvcxq5boIuzSHP3KK2/dcY86WFRaJAIilQpOlj1KrUY6oGlM0NsMgHapqgP9Oof+d2KFFw==",
+      "type": "package",
+      "path": "avalonia.skpictureimage/0.10.6.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "avalonia.skpictureimage.0.10.6.1.nupkg.sha512",
+        "avalonia.skpictureimage.nuspec",
+        "lib/net461/Avalonia.SKPictureImage.dll",
+        "lib/net5.0/Avalonia.SKPictureImage.dll",
+        "lib/netcoreapp3.1/Avalonia.SKPictureImage.dll",
+        "lib/netstandard2.0/Avalonia.SKPictureImage.dll",
+        "lib/netstandard2.1/Avalonia.SKPictureImage.dll"
       ]
     },
     "Avalonia.Svg/11.2.0.2": {
@@ -3773,9 +3829,12 @@
   },
   "projectFileDependencyGroups": {
     "net5.0": [
+      "AsyncImageLoader.Avalonia >= 3.3.0",
       "Avalonia >= 11.2.6",
       "Avalonia.Desktop >= 11.2.6",
       "Avalonia.Diagnostics >= 11.2.6",
+      "Avalonia.SKPictureImage >= 0.10.6.1",
+      "Avalonia.Themes.Simple >= 11.2.6",
       "Avalonia.Xaml.Behaviors >= 11.2.0.14",
       "Kardamon.Core >= 1.0.0",
       "VideoLAN.LibVLC.Windows >= 3.0.21"
@@ -3822,6 +3881,10 @@
       "net5.0": {
         "targetAlias": "net5.0",
         "dependencies": {
+          "AsyncImageLoader.Avalonia": {
+            "target": "Package",
+            "version": "[3.3.0, )"
+          },
           "Avalonia": {
             "target": "Package",
             "version": "[11.2.6, )"
@@ -3831,6 +3894,14 @@
             "version": "[11.2.6, )"
           },
           "Avalonia.Diagnostics": {
+            "target": "Package",
+            "version": "[11.2.6, )"
+          },
+          "Avalonia.SKPictureImage": {
+            "target": "Package",
+            "version": "[0.10.6.1, )"
+          },
+          "Avalonia.Themes.Simple": {
             "target": "Package",
             "version": "[11.2.6, )"
           },

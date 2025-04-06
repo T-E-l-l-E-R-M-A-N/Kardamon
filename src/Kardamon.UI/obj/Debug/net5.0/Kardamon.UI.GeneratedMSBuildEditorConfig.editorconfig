@@ -19,5 +19,8 @@ build_property.ProjectDir = C:\Users\user\source\repos\T-E-l-l-E-R-M-A-N\Kardamo
 [C:/Users/user/source/repos/T-E-l-l-E-R-M-A-N/Kardamon/src/Kardamon.UI/App.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/user/source/repos/T-E-l-l-E-R-M-A-N/Kardamon/src/Kardamon.UI/MainWindow.axaml]
+[C:/Users/user/source/repos/T-E-l-l-E-R-M-A-N/Kardamon/src/Kardamon.UI/Pages/Pages.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[C:/Users/user/source/repos/T-E-l-l-E-R-M-A-N/Kardamon/src/Kardamon.UI/Windows/MainWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml

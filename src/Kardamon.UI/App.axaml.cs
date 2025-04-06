@@ -2,6 +2,8 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Kardamon.Core;
+using Kardamon.Core.ViewModels.Windows;
+using Kardamon.UI.Windows;
 
 namespace Kardamon.UI
 {

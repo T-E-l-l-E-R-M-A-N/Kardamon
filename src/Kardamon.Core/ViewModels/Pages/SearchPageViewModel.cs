@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using Kardamon.Core.ViewModels.Pages;
 using Prism.Commands;
 
 namespace Kardamon.Core

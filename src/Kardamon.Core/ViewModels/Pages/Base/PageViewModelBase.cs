@@ -1,6 +1,6 @@
 ﻿using Prism.Mvvm;
 
-namespace Kardamon.Core
+namespace Kardamon.Core.ViewModels.Pages
 {
     public abstract class PageViewModelBase : BindableBase, IPage
     {

@@ -1,0 +1,333 @@
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:valueConverters="clr-namespace:Kardamon.UI.ValueConverters"
+                    xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia">
+    <!-- Add Resources Here -->
+    <DataTemplate x:Key="HomePage">
+        <DockPanel LastChildFill="True">
+            <DockPanel.Styles>
+                <Style Selector="Button.previewActionButton /template/ ContentPresenter">
+                    <Setter Property="Transitions">
+                        <Transitions>
+                            <BrushTransition Property="Background" Duration="0:0:0.1" />
+
+                        </Transitions>
+                    </Setter>
+                </Style>
+                <Style Selector="Button.previewActionButton TextBlock">
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="TextAlignment" Value="Center"/>
+                </Style>
+                <Style Selector="Button.previewActionButton">
+                    <Setter Property="Margin" Value="2,0" />
+                </Style>
+                <Style Selector="Button.previewActionButton">
+                    <Setter Property="Background" Value="#40000000" />
+                    <Setter Property="Foreground" Value="#FFFFFF" />
+                    <Setter Property="BorderThickness" Value="0" />
+                    <Setter Property="Height" Value="40" />
+                    <Setter Property="Width" Value="120" />
+                    <Setter Property="Template">
+                        <ControlTemplate>
+                            <ContentPresenter Background="{TemplateBinding Background}"
+                                              Content="{TemplateBinding Content}"
+                                              Padding="{TemplateBinding Padding}"
+                                              BorderThickness="{TemplateBinding BorderThickness}"
+                                              BorderBrush="{TemplateBinding BorderBrush}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}" />
+                        </ControlTemplate>
+                    </Setter>
+                </Style>
+                <Style Selector="Button.previewActionButton:pointerover /template/ ContentPresenter">
+                    <Setter Property="Background" Value="Green" />
+                </Style>
+                <Style Selector="Button.previewActionButton:pressed /template/ ContentPresenter">
+                    <Setter Property="Background" Value="Green" />
+                </Style>
+            </DockPanel.Styles>
+            <Border DockPanel.Dock="Top"
+                    Height="48">
+                <StackPanel Orientation="Horizontal">
+                    <ListBox ItemsSource="{Binding Groups}"
+                         SelectedItem="{Binding Group}"
+                         Background="Transparent"
+                         BorderThickness="0">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock
+                                Text="{Binding Name, Converter={valueConverters:TextCharacterCasingConverter}, ConverterParameter=upper}"
+                                Width="100"
+                                VerticalAlignment="Center"
+                                TextAlignment="Center"
+                                FontSize="12" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.Styles>
+                        <Style Selector="ListBoxItem:not(:nth-child(1))">
+                            <Setter Property="Margin" Value="2,0" />
+                        </Style>
+                        <Style Selector="ListBoxItem /template/ ContentPresenter">
+                            <Setter Property="Transitions">
+                                <Transitions>
+                                    <BrushTransition Property="Background" Duration="0:0:0.5" />
+                                </Transitions>
+                            </Setter>
+                        </Style>
+                        <Style Selector="ListBoxItem">
+                            <Setter Property="Background" Value="#40000000" />
+                            <Setter Property="Foreground" Value="#FFFFFF" />
+                            <Setter Property="Height" Value="40" />
+                            <Setter Property="Margin" Value="0,0" />
+                            <Setter Property="Template">
+                                <ControlTemplate>
+                                    <ContentPresenter Background="{TemplateBinding Background}"
+                                                      Content="{TemplateBinding Content}"
+                                                      Padding="{TemplateBinding Padding}"
+                                                      BorderThickness="{TemplateBinding BorderThickness}"
+                                                      BorderBrush="{TemplateBinding BorderBrush}"
+                                                      ContentTemplate="{TemplateBinding ContentTemplate}" />
+                                </ControlTemplate>
+                            </Setter>
+                        </Style>
+                        <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter">
+                            <Setter Property="Background" Value="Green" />
+                        </Style>
+                        <Style Selector="ListBoxItem:selected /template/ ContentPresenter">
+                            <Setter Property="Background" Value="DarkGreen" />
+                            <Setter Property="Foreground" Value="#FFFFFF" />
+                        </Style>
+                        <Style Selector="ListBoxItem:selected:pointerover /template/ ContentPresenter">
+                            <Setter Property="Background" Value="Green" />
+                        </Style>
+                    </ListBox.Styles>
+                </ListBox>
+                <Button Classes="toolbarButton"
+                        Command="{Binding $parent[Window].DataContext.PlayAllCommand}"
+                        CommandParameter="{Binding Group.Items}">
+                    <StackPanel Orientation="Horizontal"
+                                Margin="10,0"
+                                Spacing="10">
+                        <Svg Width="20"
+                             Path="/Assets/pause.svg">
+                        </Svg>
+                        <TextBlock Text="PLAY ALL"
+                                   VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                </StackPanel>
+            </Border>
+            <Border Classes="bottomAudioItemPreview"
+                    DockPanel.Dock="Top"
+                    Padding="10"
+                    Classes.isShown="{Binding $parent[Window].DataContext.SelectionHost.SelectedItem, Converter={x:Static ObjectConverters.IsNotNull}}">
+                <Border.Styles>
+                    <Style Selector="Border.bottomAudioItemPreview">
+                        <Setter Property="Height" Value="0"></Setter>
+                        <Setter Property="Transitions">
+                            <Transitions>
+                                <DoubleTransition Property="Height" Duration="0:0:0.1" />
+                                <DoubleTransition Property="Opacity" Duration="0:0:0.1" />
+                            </Transitions>
+                        </Setter>
+                    </Style>
+                    <Style Selector="Border.isShown">
+                        <Setter Property="Height" Value="120"></Setter>
+                        <Setter Property="Opacity" Value="1"></Setter>
+                    </Style>
+                    <Style Selector="Border:not(.isShown)">
+                        <Setter Property="Height" Value="0"></Setter>
+                        <Setter Property="Opacity" Value="0"></Setter>
+                    </Style>
+                </Border.Styles>
+                <StackPanel Orientation="Horizontal"
+                            Spacing="20"
+                            DataContext="{Binding $parent[Window].DataContext.SelectionHost.SelectedItem}">
+                    <Border Background="#008000"
+                            Width="110"
+                            Opacity="1"
+                            Height="110">
+                        <Grid>
+                            <Svg Width="80"
+                                 Height="80"
+                                 Css="path {fill: #FFF}"
+                                 Path="/Assets/headphones.svg">
+                            </Svg>
+                            <Image asyncImageLoader:ImageLoader.Source="{Binding Image}" />
+                        </Grid>
+                    </Border>
+                    <StackPanel Spacing="5"
+
+                                Margin="5,0">
+                        <TextBlock
+                            Text="{Binding Title, Converter={valueConverters:TextCharacterCasingConverter}, ConverterParameter=upper}"
+                            FontWeight="Bold"
+                            FontSize="15" />
+                        <TextBlock
+                            Text="{Binding Artist, Converter={valueConverters:TextCharacterCasingConverter}, ConverterParameter=upper}"
+                            FontSize="12" />
+                        <TextBlock
+                            Text="{Binding Time, Converter={valueConverters:TextCharacterCasingConverter}, ConverterParameter=upper}"
+                            FontSize="12" />
+                        <StackPanel Orientation="Horizontal">
+                            <Button Classes="previewActionButton"
+                                    Command="{Binding $parent[Window].DataContext.PlayCommand}"
+                                    CommandParameter="{Binding .}">
+                                <TextBlock>
+                                    PLAY
+                                </TextBlock>
+                            </Button>
+                            <Button Classes="previewActionButton">
+                                <TextBlock>
+                                    DOWNLOAD
+                                </TextBlock>
+                            </Button>
+                            <Button Classes="previewActionButton">
+                                <TextBlock>
+                                    FAVORITE
+                                </TextBlock>
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+            <ContentControl Content="{Binding Group}" Margin="5">
+                <ContentControl.ContentTemplate>
+                    <DataTemplate>
+                        <ListBox ItemsSource="{Binding Items}"
+                                 SelectedItem="{Binding $parent[Window].DataContext.SelectionHost.SelectedItem}"
+                                 Background="Transparent"
+                                 Name="ItemsList"
+                                 BorderThickness="0"
+                                 Padding="0"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            <ListBox.Styles>
+                                <Style Selector="ItemsPresenter">
+                                    <Setter Property="HorizontalAlignment" Value="Center"></Setter>
+                                </Style>
+                                <Style Selector="ListBoxItem">
+                                    <Setter Property="Width" Value="320" />
+                                    <Setter Property="Background" Value="#FFFFFF" />
+                                    <Setter Property="Foreground" Value="#000000" />
+                                    <Setter Property="BorderThickness" Value="1" />
+                                    <Setter Property="BorderBrush" Value="#20000000" />
+                                    <Setter Property="Height" Value="90" />
+                                    <Setter Property="Margin" Value="5" />
+                                    <Setter Property="ZIndex" Value="1" />
+                                    <Setter Property="Template">
+                                        <ControlTemplate>
+                                            <ContentPresenter Background="{TemplateBinding Background}"
+                                                              Content="{TemplateBinding Content}"
+                                                              Padding="{TemplateBinding Padding}"
+                                                              BorderThickness="{TemplateBinding BorderThickness}"
+                                                              BorderBrush="{TemplateBinding BorderBrush}"
+                                                              ContentTemplate="{TemplateBinding ContentTemplate}" />
+                                        </ControlTemplate>
+                                    </Setter>
+                                </Style>
+                                <Style Selector="ListBoxItem">
+                                    <Setter Property="Transitions">
+                                        <Transitions>
+                                            <TransformOperationsTransition Property="RenderTransform"
+                                                                           Duration="0:0:0.1" />
+
+                                        </Transitions>
+                                    </Setter>
+                                </Style>
+                                <Style Selector="ListBoxItem /template/ ContentPresenter">
+                                    <Setter Property="Transitions">
+                                        <Transitions>
+                                            <BrushTransition Property="Background" Duration="0:0:0.1" />
+
+                                        </Transitions>
+                                    </Setter>
+                                </Style>
+                                <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter">
+                                    <Setter Property="Background" Value="Green" />
+                                    <Setter Property="Foreground" Value="#FFFFFF" />
+                                </Style>
+                                <Style Selector="ListBoxItem:selected /template/ ContentPresenter">
+                                    <Setter Property="Background" Value="DarkGreen" />
+                                    <Setter Property="Foreground" Value="#FFFFFF" />
+
+                                </Style>
+                                <Style Selector="ListBoxItem:selected:pointerover /template/ ContentPresenter">
+                                    <Setter Property="Background" Value="Green" />
+                                </Style>
+                            </ListBox.Styles>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <DockPanel LastChildFill="True"
+                                               Margin="10">
+                                        <Border Background="#88008000"
+                                                Width="70"
+                                                Height="70">
+                                            <Grid>
+                                                <Svg Width="50"
+                                                     Height="50"
+                                                     Css="path {fill: #ffffff}"
+                                                     Path="/Assets/headphones.svg">
+                                                </Svg>
+                                                <Image asyncImageLoader:ImageLoader.Source="{Binding Image}" />
+                                            </Grid>
+                                        </Border>
+                                        <StackPanel Spacing="5"
+                                                    Margin="5,0">
+                                            <StackPanel Orientation="Horizontal"
+                                                        Spacing="2">
+                                                <TextBlock Text="[PLAYING]"
+                                                           FontWeight="Bold"
+                                                           FontSize="15">
+                                                    <TextBlock.IsVisible>
+                                                        <MultiBinding Converter="{valueConverters:ObjectConverter}" ConverterParameter="IsEqual">
+                                                            <Binding Path="."/>
+                                                            <Binding RelativeSource="{RelativeSource AncestorType=Window}" Path="DataContext.PlayerService.CurrentMedia"/>
+                                                        </MultiBinding>
+                                                    </TextBlock.IsVisible>
+                                                </TextBlock>
+                                                <TextBlock Text="{Binding Title}"
+                                                           FontWeight="Bold"
+                                                           FontSize="15" />
+                                            </StackPanel>
+                                            <TextBlock Text="{Binding Artist}"
+                                                       FontSize="12" />
+                                            <TextBlock Text="{Binding Time}"
+                                                       FontSize="12" />
+                                            <ProgressBar Height="5"
+                                                         BorderThickness="0"
+                                                         Background="LightGray"
+                                                         Foreground="Green"
+                                                         Maximum="{Binding $parent[Window].DataContext.PlayerService.TotalTime}"
+                                                         Value="{Binding $parent[Window].DataContext.PlayerService.CurrentTime}"
+                                                         MinHeight="2">
+                                                <TextBlock.IsVisible>
+                                                    <MultiBinding Converter="{valueConverters:ObjectConverter}" ConverterParameter="IsEqual">
+                                                        <Binding Path="."/>
+                                                        <Binding RelativeSource="{RelativeSource AncestorType=Window}" Path="DataContext.PlayerService.CurrentMedia"/>
+                                                    </MultiBinding>
+                                                </TextBlock.IsVisible>
+                                            </ProgressBar>
+                                        </StackPanel>
+                                    </DockPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </DataTemplate>
+                </ContentControl.ContentTemplate>
+            </ContentControl>
+        </DockPanel>
+    </DataTemplate>
+    <DataTemplate x:Key="SearchPage">
+        <TextBlock Text="{Binding Name}"
+                   Foreground="Orange" />
+    </DataTemplate>
+</ResourceDictionary>

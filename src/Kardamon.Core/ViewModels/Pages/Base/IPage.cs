@@ -1,4 +1,4 @@
-﻿namespace Kardamon.Core
+﻿namespace Kardamon.Core.ViewModels.Pages
 {
     public interface IPage
     {

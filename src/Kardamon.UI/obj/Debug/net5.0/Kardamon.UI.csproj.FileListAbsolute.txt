@@ -935,3 +935,5 @@ C:\Users\user\source\repos\T-E-l-l-E-R-M-A-N\Kardamon\src\Kardamon.UI\bin\Debug\
 C:\Users\user\source\repos\T-E-l-l-E-R-M-A-N\Kardamon\src\Kardamon.UI\bin\Debug\net5.0\libvlc\win-x86\plugins\visualization\libgoom_plugin.dll
 C:\Users\user\source\repos\T-E-l-l-E-R-M-A-N\Kardamon\src\Kardamon.UI\bin\Debug\net5.0\libvlc\win-x86\plugins\visualization\libprojectm_plugin.dll
 C:\Users\user\source\repos\T-E-l-l-E-R-M-A-N\Kardamon\src\Kardamon.UI\bin\Debug\net5.0\libvlc\win-x86\plugins\visualization\libvisual_plugin.dll
+C:\Users\user\source\repos\T-E-l-l-E-R-M-A-N\Kardamon\src\Kardamon.UI\bin\Debug\net5.0\Avalonia.SKPictureImage.dll
+C:\Users\user\source\repos\T-E-l-l-E-R-M-A-N\Kardamon\src\Kardamon.UI\bin\Debug\net5.0\AsyncImageLoader.Avalonia.dll

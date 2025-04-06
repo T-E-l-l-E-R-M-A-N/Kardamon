@@ -124,6 +124,10 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "dependencies": {
+            "AsyncImageLoader.Avalonia": {
+              "target": "Package",
+              "version": "[3.3.0, )"
+            },
             "Avalonia": {
               "target": "Package",
               "version": "[11.2.6, )"
@@ -133,6 +137,14 @@
               "version": "[11.2.6, )"
             },
             "Avalonia.Diagnostics": {
+              "target": "Package",
+              "version": "[11.2.6, )"
+            },
+            "Avalonia.SKPictureImage": {
+              "target": "Package",
+              "version": "[0.10.6.1, )"
+            },
+            "Avalonia.Themes.Simple": {
               "target": "Package",
               "version": "[11.2.6, )"
             },

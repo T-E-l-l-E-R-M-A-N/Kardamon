@@ -1,6 +1,7 @@
 using Avalonia.Controls;
+using Avalonia.Markup.Xaml;
 
-namespace Kardamon.UI
+namespace Kardamon.UI.Windows
 {
     public partial class MainWindow : Window
     {

@@ -1,0 +1,264 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+        xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
+        xmlns:iac="clr-namespace:Avalonia.Xaml.Interactions.Custom;assembly=Avalonia.Xaml.Interactions"
+        xmlns:valueConverters="clr-namespace:Kardamon.UI.ValueConverters"
+        xmlns:templateSelectors="clr-namespace:Kardamon.UI.TemplateSelectors"
+        xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
+
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Kardamon.UI.Windows.MainWindow"
+        
+        Title="Kardamon.UI"
+		FontSize="12"
+        MinWidth="760">
+	<Window.Styles>
+		<Style Selector="Button.toolbarButton">
+			<Setter Property="Background" Value="Transparent" />
+			<Setter Property="MinWidth" Value="48" />
+			<Setter Property="Height" Value="40" />
+			<Setter Property="Template">
+				<ControlTemplate>
+					<ContentPresenter Background="{TemplateBinding Background}" Content="{TemplateBinding Content}"/>
+				</ControlTemplate>
+			</Setter>
+		</Style>
+		<Style Selector="Button.toolbarButton Svg">
+			<Setter Property="(Svg.Css)" Value="path {fill: #000}"></Setter>
+			<Setter Property="Width" Value="30"></Setter>
+		</Style>
+		<Style Selector="Button.toolbarButton:pointerover">
+			<Setter Property="Background" Value="DarkGreen" />
+			<Setter Property="TextElement.Foreground" Value="#FFF" />
+		</Style>
+		<Style Selector="Button.toolbarButton:pointerover Svg">
+			<Setter Property="(Svg.Css)" Value="path {fill: #FFF}"></Setter>
+		</Style>
+		
+		
+		<Style Selector="ToggleButton.toolbarButton">
+			<Setter Property="Background" Value="Transparent" />
+			<Setter Property="Width" Value="48" />
+			<Setter Property="Height" Value="48" />
+			<Setter Property="Template">
+				<ControlTemplate>
+					<ContentPresenter Background="{TemplateBinding Background}" Content="{TemplateBinding Content}"/>
+				</ControlTemplate>
+			</Setter>
+		</Style>
+		<Style Selector="ToggleButton.toolbarButton Svg">
+			<Setter Property="(Svg.Css)" Value="path {fill: #FFF}"></Setter>
+			<Setter Property="Width" Value="30"></Setter>
+		</Style>
+		<Style Selector="ToggleButton.toolbarButton:pointerover">
+			<Setter Property="Background" Value="Green" />
+		</Style>
+		<Style Selector="ToggleButton.toolbarButton:checked">
+			<Setter Property="Background" Value="Transparent" />
+		</Style>
+		<Style Selector="ToggleButton.toolbarButton:checked:pointerover">
+			<Setter Property="Background" Value="Green" />
+		</Style>
+		<Style Selector="ToggleButton.toolbarButton:checked Svg">
+			<Setter Property="(Svg.Css)" Value="path {fill: #FFF}"></Setter>
+		</Style>
+		<Style Selector="ToggleButton.toolbarButton:pointerover Svg">
+			<Setter Property="(Svg.Css)" Value="path {fill: #FFF}"></Setter>
+		</Style>
+		<Style Selector="Button.toolbarButton:disabled">
+			<Setter Property="IsVisible" Value="False"></Setter>
+		</Style>
+		<Style Selector="Border.appMenu ListBoxItem Svg">
+			<Setter Property="Svg.Css" Value="path {fill: #FFF; transform: scale(0.7)}"/>
+		</Style>
+		<Style Selector="Border.appMenu:not(.isShown)">
+			<Setter Property="Width" Value="70"/>
+		</Style>
+		<Style Selector="Border.appMenu.isShown">
+			<Setter Property="Width" Value="220"/>
+		</Style>
+		<Style Selector="Border.appMenu">
+			<Setter Property="Transitions">
+				<Transitions>
+					<DoubleTransition Property="Width" Duration="0:0:0.1"/>
+				</Transitions>
+			</Setter>
+		</Style>
+		
+	</Window.Styles>
+	<DockPanel LastChildFill="True">
+		<Border Classes="appMenu"
+		        Classes.isShown="{Binding #tb_openMenu.IsChecked}"
+		        Background="Black">
+			<StackPanel>
+				<ToggleButton Classes="toolbarButton"
+				              Name="tb_openMenu"
+				              Width="48"
+				              Margin="10,0"
+				              HorizontalAlignment="Left">
+					
+					<Svg 
+						Path="/Assets/menu.svg"/>
+				</ToggleButton>
+				<ListBox ItemsSource="{Binding Pages}"
+				         Background="Transparent"
+				         BorderThickness="0"
+				         Padding="0"
+				         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+				         ScrollViewer.VerticalScrollBarVisibility="Disabled"
+				         
+				         SelectedItem="{Binding CurrentPage}">
+					<ListBox.ItemTemplate>
+						<DataTemplate>
+							<StackPanel Orientation="Horizontal"
+							            Margin="24,0">
+								<Svg Width="24"
+								     Height="24"
+								     Margin="0,2,0,-2"
+								     Path="{Binding ., Converter={valueConverters:ApplicationMenuItemIconConverter}}"></Svg>
+								<TextBlock Margin="24,0,0,0" Text="{Binding Name}" VerticalAlignment="Center"/>
+							</StackPanel>
+						</DataTemplate>
+					</ListBox.ItemTemplate>
+					<ListBox.Styles>
+						<Style Selector="ListBoxItem">
+							<Setter Property="Background" Value="Transparent" />
+							<Setter Property="Foreground" Value="#FFFFFF" />
+							<Setter Property="Height" Value="48" />
+							<Setter Property="Template">
+								<ControlTemplate>
+									<ContentPresenter Background="{TemplateBinding Background}"
+									                  Content="{TemplateBinding Content}"
+									                  Padding="{TemplateBinding Padding}"
+									                  BorderThickness="{TemplateBinding BorderThickness}"
+									                  BorderBrush="{TemplateBinding BorderBrush}"
+									                  ContentTemplate="{TemplateBinding ContentTemplate}"/>
+								</ControlTemplate>
+							</Setter>
+						</Style>
+						<Style Selector="ListBoxItem:pointerover /template/ ContentPresenter">
+							<Setter Property="Background" Value="#30FFFFFF" />
+						</Style>
+						<Style Selector="ListBoxItem:selected /template/ ContentPresenter">
+							<Setter Property="Background" Value="#20FFFFFF" />
+						</Style>
+						<Style Selector="ListBoxItem:selected:pointerover /template/ ContentPresenter">
+							<Setter Property="Background" Value="#30FFFFFF" />
+						</Style>
+					</ListBox.Styles>
+				</ListBox>
+			</StackPanel>
+		</Border>
+		<Border DockPanel.Dock="Top"
+		        Background="#FFF"
+		        Height="48"
+		        Padding="5"
+		        DataContext="{Binding PlayerService}"
+		        >
+			<Grid>
+				<Border Background="#008000"
+				        Width="36"
+				        Opacity="1"
+				        HorizontalAlignment="Left"
+				        IsVisible="{Binding CurrentMedia, Converter={x:Static ObjectConverters.IsNotNull}}"
+				        Height="36">
+					<Grid>
+						<Svg Width="24"
+						     Height="24"
+						     Css="path {fill: #FFF}"
+						     Path="/Assets/headphones.svg">
+						</Svg>
+						<Image asyncImageLoader:ImageLoader.Source="{Binding CurrentMedia.Image}" />
+					</Grid>
+				</Border>
+				<StackPanel Spacing="5" Margin="50,0,0,0"
+				            Width="140"
+				            HorizontalAlignment="Left"
+				            IsVisible="{Binding CurrentMedia, Converter={x:Static ObjectConverters.IsNotNull}}">
+					<TextBlock TextTrimming="CharacterEllipsis" 
+					           FontWeight="Bold"
+					           Text="{Binding CurrentMedia.Title, FallbackValue=Title}"/>
+					<TextBlock TextTrimming="CharacterEllipsis" 
+					           Text="{Binding CurrentMedia.Artist, FallbackValue=Unknown artist}"/>
+				</StackPanel>
+				<StackPanel Orientation="Horizontal"
+				            HorizontalAlignment="Center">
+					<Button Classes="toolbarButton">
+						<Svg Width="20"
+						     Path="/Assets/rewind.svg">
+						</Svg>
+					</Button>
+					<Button Classes="toolbarButton">
+						<Svg Width="20"
+						     Path="/Assets/pause.svg">
+						</Svg>
+					</Button>
+					<Button Classes="toolbarButton">
+						<Svg Width="20"
+						     Path="/Assets/forward.svg">
+						</Svg>
+					</Button>
+				</StackPanel>
+			</Grid>
+		</Border>
+		<Border DockPanel.Dock="Top"
+		        Background="#FFF"
+		        Height="48">
+			<DockPanel LastChildFill="True"
+			           Margin="5,0">
+				<TextBox Width="320"
+				         Height="32"
+				         DockPanel.Dock="Right"
+				         HorizontalAlignment="Right"
+				         Watermark="Search anything..."
+				         VerticalContentAlignment="Center"
+				         
+				         Background="Transparent"
+				         BorderBrush="#100000">
+					<TextBox.InnerRightContent>
+						<Button Classes="toolbarButton"
+						        MinWidth="16"
+						        Width="24"
+						>
+							<Svg RenderTransform="scale(-0.4, 0.4)"
+							     Path="/Assets/search.svg"/>
+						</Button>
+					</TextBox.InnerRightContent>
+				</TextBox>
+				<StackPanel Orientation="Horizontal"
+				            Spacing="8"
+				            Margin="5,0"
+				            Classes="toolBar">
+				
+					<Button Classes="toolbarButton"
+					        Width="70"
+					        HorizontalAlignment="Left"
+					        Command="{Binding GoBackCommand}">
+					
+						<Svg 
+							Path="/Assets/menu.svg"/>
+					</Button>
+				
+					<TextBlock Text="{Binding CurrentPage.Name, Converter={valueConverters:TextCharacterCasingConverter}, ConverterParameter=upper}"
+				           
+					           VerticalAlignment="Center"
+					           FontSize="12"
+					           FontWeight="Bold"
+					           Margin="10,0"/>
+				
+				</StackPanel>
+			</DockPanel>
+		</Border>
+		
+		<Grid>
+			<ContentControl Content="{Binding CurrentPage}">
+				<ContentControl.ContentTemplate>
+					<templateSelectors:PageTemplateSelector/>
+				</ContentControl.ContentTemplate>
+			</ContentControl>
+		</Grid>
+	</DockPanel>
+</Window>

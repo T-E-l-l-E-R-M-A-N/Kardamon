@@ -17,11 +17,30 @@ namespace Kardamon.Core
         public bool Buffering { get; set; }
         public AudioModel CurrentMedia { get; set; }
         public IEnumerable<AudioModel> Queue { get; set; }
+        public double CurrentTime { get; set; }
+        public string CurrentTimeString { get; set; }
+        public double TotalTime { get; set; }
+        public string TotalTimeString { get; set; }
+
         public void Init()
         {
             _libVlc = new LibVLC();
             _player = new MediaPlayer(_libVlc);
+            _player.PositionChanged += PlayerOnPositionChanged;
         }
+
+        private void PlayerOnPositionChanged(object? sender, MediaPlayerPositionChangedEventArgs e)
+        {
+            var dur = TimeSpan.FromMilliseconds(_player.Media.Duration);
+            var time = TimeSpan.FromMilliseconds(_player.Time);
+
+            CurrentTime = time.TotalSeconds;
+            TotalTime = dur.TotalSeconds;
+
+            CurrentTimeString = time.ToString("m\\:ss");
+            TotalTimeString = dur.ToString("m\\:ss");
+        }
+
         public void ClearQueue()
         {
             throw new NotImplementedException();

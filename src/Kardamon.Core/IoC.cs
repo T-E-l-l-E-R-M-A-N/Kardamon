@@ -1,4 +1,6 @@
 ﻿using System;
+using Kardamon.Core.ViewModels.Pages;
+using Kardamon.Core.ViewModels.Windows;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Kardamon.Core
@@ -13,6 +15,7 @@ namespace Kardamon.Core
 
             services.AddScoped<ModelFactory>();
             services.AddScoped<PageFactory>();
+            services.AddScoped<SelectionHost>();
             services.AddScoped<IPlayer, UniversalPlayerService>();
 
             services.AddScoped<MainWindowViewModel>();
