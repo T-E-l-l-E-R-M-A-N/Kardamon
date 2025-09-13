@@ -1,0 +1,521 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:Kardamon.ViewModels"
+             xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
+             xmlns:avalonia="https://github.com/projektanker/icons.avalonia"
+             xmlns:behaviors="clr-namespace:Kardamon.Behaviors"
+             xmlns:views="clr-namespace:Kardamon.Views"
+             xmlns:valueConverters="clr-namespace:Kardamon.ValueConverters"
+             mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="600"
+             x:Class="Kardamon.Views.NowPlayingPage"
+             Background="Black"
+             Foreground="#FFF"
+             x:DataType="viewModels:NowPlayingPageViewModel">
+    <Grid>
+        <StackPanel Spacing="8"
+
+                    Margin="30,20,0,40">
+            <TextBlock
+                Text="{Binding MiniPlayer.Song.Name, Converter={StaticResource StringCaseConverter}, ConverterParameter=u, FallbackValue=NOT PLAYING}"
+                FontSize="32"
+                TextTrimming="CharacterEllipsis"
+                TextAlignment="Left"
+                FontWeight="Bold">
+            </TextBlock>
+            <TextBlock
+                Text="{Binding MiniPlayer.Song.Artist, Converter={StaticResource StringCaseConverter}, ConverterParameter=u}"
+                FontSize="20"
+                TextTrimming="CharacterEllipsis"
+                Opacity="0.4"
+                TextAlignment="Left"
+                FontWeight="Bold">
+            </TextBlock>
+        </StackPanel>
+        <StackPanel Margin="30,530,30,10"
+                    Spacing="8">
+            <Slider Orientation="Horizontal"
+                    
+                    Height="30"
+                    ClipToBounds="False"
+                    Maximum="{Binding MiniPlayer.TotalTime}"
+                    Value="{Binding MiniPlayer.CurrentTime, FallbackValue=0}"
+                    Foreground="#fff">
+                <Slider.Styles>
+                    <Style Selector="Slider:horizontal /template/ Track">
+                        <Setter Property="DeferThumbDrag" Value="False"></Setter>
+                        <Setter Property="ClipToBounds" Value="False"></Setter>
+                        <Setter Property="Height" Value="4" />
+                    </Style>
+                    <Style Selector="Slider:horizontal /template/ RepeatButton#PART_IncreaseButton">
+                        <Setter Property="IsHitTestVisible" Value="False"></Setter>
+                        <Setter Property="Template">
+                            <ControlTemplate>
+                                <Border Height="2"
+                                        Background="Gray">
+                                </Border>
+                            </ControlTemplate>
+                        </Setter>
+                    </Style>
+                    <Style Selector="Slider:horizontal /template/ RepeatButton#PART_DecreaseButton">
+                        <Setter Property="IsHitTestVisible" Value="False"></Setter>
+                        <Setter Property="Template">
+                            <ControlTemplate>
+                                <Border Height="2"
+                                        Background="#FFF">
+                                </Border>
+                            </ControlTemplate>
+                        </Setter>
+                    </Style>
+                    <Style Selector="Slider:horizontal /template/ Thumb">
+                        <Setter Property="Width" Value="20"></Setter>
+                        <Setter Property="Height" Value="20"></Setter>
+                        <Setter Property="Background" Value="Transparent"></Setter>
+                        <Setter Property="CornerRadius" Value="10"></Setter>
+                        <Setter Property="Template">
+                            <ControlTemplate>
+                                <Border
+                                    CornerRadius="{TemplateBinding CornerRadius}"
+                                    Background="{TemplateBinding Background}"
+                                    BorderThickness="1"
+                                    BorderBrush="#FFF">
+                                </Border>
+                            </ControlTemplate>
+                        </Setter>
+                    </Style>
+                    <Style Selector="Slider:horizontal:pointerover /template/ Thumb">
+                        <Setter Property="Width" Value="26"></Setter>
+                        <Setter Property="Height" Value="26"></Setter>
+                        <Setter Property="Background" Value="#FFF"></Setter>
+                        <Setter Property="CornerRadius" Value="13"></Setter>
+                    </Style>
+
+                </Slider.Styles>
+                <Interaction.Behaviors>
+                    <behaviors:SliderDragBehavior DragStartCommand="{Binding MiniPlayer.SeekToStartCommand}"
+                                                  Command="{Binding MiniPlayer.SeekToCommand}" />
+                </Interaction.Behaviors>
+            </Slider>
+            <Grid>
+                <TextBlock Text="{Binding MiniPlayer.CurrentTimeString, FallbackValue=00:00}"
+                           TextAlignment="Left"
+
+                           FontSize="12"
+                           FontWeight="Thin" />
+                <TextBlock Text="{Binding MiniPlayer.TotalTimeString, FallbackValue=00:00}"
+                           TextAlignment="Right"
+                           FontSize="12"
+                           FontWeight="Thin" />
+            </Grid>
+        </StackPanel>
+        <StackPanel Spacing="2"
+                    Margin="30,110,0,0"
+                    IsVisible="{Binding !ListIsVisible}"
+                    HorizontalAlignment="Left"
+                    Width="300">
+
+            <Border Height="300"
+                    Width="300"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Background="#10FFFFFF">
+                <Grid>
+                    <avalonia:Icon FontSize="120"
+                                   Foreground="DimGray"
+                                   Value="mdi headphones" />
+                    <asyncImageLoader:AdvancedImage Source="{Binding MiniPlayer.Song.ImagePath}"></asyncImageLoader:AdvancedImage>
+                </Grid>
+            </Border>
+            <StackPanel Orientation="Horizontal"
+                        Spacing="10"
+                        HorizontalAlignment="Center"
+                        Margin="0,30"
+                        Height="48">
+                <Button Classes.IsFavorite="{Binding MiniPlayer.Song.IsFavorite}"
+                        Height="48"
+                        Width="48">
+                    <Button.Styles>
+                        <Style Selector="Button">
+                            <Setter Property="Background" Value="Transparent" />
+                        </Style>
+                        <Style Selector="Button:pressed">
+                            <Setter Property="Background" Value="White" />
+                        </Style>
+                        <Style Selector="Button:not(.IsPlaying) /template/ avalonia|Icon">
+                            <Setter Property="Foreground" Value="Gray" />
+                        </Style>
+                        <Style Selector="Button.IsPlaying /template/ avalonia|Icon">
+                            <Setter Property="Foreground" Value="Red" />
+                        </Style>
+                    </Button.Styles>
+                    <Button.Template>
+                        <ControlTemplate>
+                            <Border Background="{TemplateBinding Background}"
+                                    CornerRadius="24"
+                                    BorderBrush="#FFFFFF"
+                                    BorderThickness="0">
+                                <avalonia:Icon Value="mdi heart"
+                                               FontSize="20">
+                                </avalonia:Icon>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+                <Button Command="{Binding MiniPlayer.RewindCommand}"
+                        Height="48"
+                        Width="48">
+                    <Button.Styles>
+                        <Style Selector="Button">
+                            <Setter Property="Background" Value="Transparent" />
+                        </Style>
+                        <Style Selector="Button:pressed">
+                            <Setter Property="Background" Value="Gray" />
+                        </Style>
+                    </Button.Styles>
+                    <Button.Template>
+                        <ControlTemplate>
+                            <Border Background="{TemplateBinding Background}"
+                                    CornerRadius="24"
+                                    BorderBrush="#FFFFFF"
+                                    BorderThickness="1">
+                                <avalonia:Icon Value="mdi rewind"
+                                               FontSize="26"
+                                               Foreground="#FFF">
+                                </avalonia:Icon>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+                <Button IsEnabled="{Binding MiniPlayer.Song, Converter={x:Static ObjectConverters.IsNotNull}}"
+                        Classes.Playing="{Binding MiniPlayer.IsPlaying}"
+                        Command="{Binding MiniPlayer.TogglePlayCommand}"
+                        Height="48"
+                        Width="48">
+                    <Button.Styles>
+                        <Style Selector="Button">
+                            <Setter Property="Background" Value="Transparent" />
+                        </Style>
+                        <Style Selector="Button:pressed">
+                            <Setter Property="Background" Value="Gray" />
+                        </Style>
+                        <Style Selector="Button /template/ avalonia|Icon">
+                            <Setter Property="Value" Value="mdi play" />
+                        </Style>
+                        <Style Selector="Button.Playing /template/ avalonia|Icon">
+                            <Setter Property="Value" Value="mdi pause" />
+                        </Style>
+                    </Button.Styles>
+                    <Button.Template>
+                        <ControlTemplate>
+                            <Border Background="{TemplateBinding Background}"
+                                    CornerRadius="24"
+                                    BorderBrush="#FFFFFF"
+                                    BorderThickness="1">
+                                <avalonia:Icon FontSize="26"
+                                               Foreground="#FFF">
+                                </avalonia:Icon>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+                <Button Command="{Binding MiniPlayer.ForwardCommand}"
+                        Height="48"
+                        Width="48">
+                    <Button.Styles>
+                        <Style Selector="Button">
+                            <Setter Property="Background" Value="Transparent" />
+                        </Style>
+                        <Style Selector="Button:pressed">
+                            <Setter Property="Background" Value="Gray" />
+                        </Style>
+                    </Button.Styles>
+                    <Button.Template>
+                        <ControlTemplate>
+                            <Border Background="{TemplateBinding Background}"
+                                    CornerRadius="24"
+                                    BorderBrush="#FFFFFF"
+                                    BorderThickness="1">
+                                <avalonia:Icon Value="mdi fast-forward"
+                                               Foreground="#FFF"
+                                               FontSize="26">
+                                </avalonia:Icon>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+                <Button
+                    DockPanel.Dock="Right"
+                    Height="48"
+                    Width="48"
+                    Command="{Binding ToggleListVisibilityCommand}">
+                    <Button.Styles>
+                        <Style Selector="Button">
+                            <Setter Property="Background" Value="Transparent" />
+                        </Style>
+                        <Style Selector="Button:pressed">
+                            <Setter Property="Background" Value="Gray" />
+                        </Style>
+                    </Button.Styles>
+                    <Button.Template>
+                        <ControlTemplate>
+                            <Border Background="{TemplateBinding Background}"
+                                    CornerRadius="24"
+                                    BorderBrush="#FFFFFF"
+                                    BorderThickness="0">
+                                <avalonia:Icon Value="mdi format-list-bulleted-square"
+                                               Foreground="#FFF"
+                                               FontSize="20">
+                                </avalonia:Icon>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </StackPanel>
+
+
+        </StackPanel>
+        <Grid Margin="0,90,0,0"
+              
+              IsVisible="{Binding ListIsVisible, FallbackValue=True}"
+              Background="Black">
+            <DockPanel LastChildFill="True">
+                <ProgressBar DockPanel.Dock="Top"
+                             Height="4"
+                             MinHeight="4"
+                             CornerRadius="0"
+                             BorderThickness="0"
+                             Foreground="#FFF"
+                             Maximum="{Binding MiniPlayer.TotalTime}"
+                             Value="{Binding MiniPlayer.CurrentTime, FallbackValue=0}"
+                             Margin="30,30,30,0"
+                             Background="Gray"/>
+                <StackPanel Orientation="Horizontal"
+                            DockPanel.Dock="Top"
+                            Spacing="10"
+                            Width="300"
+                            HorizontalAlignment="Left"
+                            Margin="30,30"
+                            Height="48">
+                <Button Classes.IsFavorite="{Binding MiniPlayer.Song.IsFavorite}"
+                        Height="48"
+                        Width="48">
+                    <Button.Styles>
+                        <Style Selector="Button">
+                            <Setter Property="Background" Value="Transparent" />
+                        </Style>
+                        <Style Selector="Button:pressed">
+                            <Setter Property="Background" Value="White" />
+                        </Style>
+                        <Style Selector="Button:not(.IsPlaying) /template/ avalonia|Icon">
+                            <Setter Property="Foreground" Value="Gray" />
+                        </Style>
+                        <Style Selector="Button.IsPlaying /template/ avalonia|Icon">
+                            <Setter Property="Foreground" Value="Red" />
+                        </Style>
+                    </Button.Styles>
+                    <Button.Template>
+                        <ControlTemplate>
+                            <Border Background="{TemplateBinding Background}"
+                                    CornerRadius="24"
+                                    BorderBrush="#FFFFFF"
+                                    BorderThickness="0">
+                                <avalonia:Icon Value="mdi heart"
+                                               FontSize="20">
+                                </avalonia:Icon>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+                <Button Command="{Binding MiniPlayer.RewindCommand}"
+                        Height="48"
+                        Width="48">
+                    <Button.Styles>
+                        <Style Selector="Button">
+                            <Setter Property="Background" Value="Transparent" />
+                        </Style>
+                        <Style Selector="Button:pressed">
+                            <Setter Property="Background" Value="Gray" />
+                        </Style>
+                    </Button.Styles>
+                    <Button.Template>
+                        <ControlTemplate>
+                            <Border Background="{TemplateBinding Background}"
+                                    CornerRadius="24"
+                                    BorderBrush="#FFFFFF"
+                                    BorderThickness="1">
+                                <avalonia:Icon Value="mdi rewind"
+                                               FontSize="26"
+                                               Foreground="#FFF">
+                                </avalonia:Icon>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+                <Button IsEnabled="{Binding MiniPlayer.Song, Converter={x:Static ObjectConverters.IsNotNull}}"
+                        Classes.Playing="{Binding MiniPlayer.IsPlaying}"
+                        Command="{Binding MiniPlayer.TogglePlayCommand}"
+                        Height="48"
+                        Width="48">
+                    <Button.Styles>
+                        <Style Selector="Button">
+                            <Setter Property="Background" Value="Transparent" />
+                        </Style>
+                        <Style Selector="Button:pressed">
+                            <Setter Property="Background" Value="Gray" />
+                        </Style>
+                        <Style Selector="Button /template/ avalonia|Icon">
+                            <Setter Property="Value" Value="mdi play" />
+                        </Style>
+                        <Style Selector="Button.Playing /template/ avalonia|Icon">
+                            <Setter Property="Value" Value="mdi pause" />
+                        </Style>
+                    </Button.Styles>
+                    <Button.Template>
+                        <ControlTemplate>
+                            <Border Background="{TemplateBinding Background}"
+                                    CornerRadius="24"
+                                    BorderBrush="#FFFFFF"
+                                    BorderThickness="1">
+                                <avalonia:Icon FontSize="26"
+                                               Foreground="#FFF">
+                                </avalonia:Icon>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+                <Button Command="{Binding MiniPlayer.ForwardCommand}"
+                        Height="48"
+                        Width="48">
+                    <Button.Styles>
+                        <Style Selector="Button">
+                            <Setter Property="Background" Value="Transparent" />
+                        </Style>
+                        <Style Selector="Button:pressed">
+                            <Setter Property="Background" Value="Gray" />
+                        </Style>
+                    </Button.Styles>
+                    <Button.Template>
+                        <ControlTemplate>
+                            <Border Background="{TemplateBinding Background}"
+                                    CornerRadius="24"
+                                    BorderBrush="#FFFFFF"
+                                    BorderThickness="1">
+                                <avalonia:Icon Value="mdi fast-forward"
+                                               Foreground="#FFF"
+                                               FontSize="26">
+                                </avalonia:Icon>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+                <Button
+                    DockPanel.Dock="Right"
+                    Height="48"
+                    Width="48"
+                    Command="{Binding ToggleListVisibilityCommand}">
+                    <Button.Styles>
+                        <Style Selector="Button">
+                            <Setter Property="Background" Value="Transparent" />
+                        </Style>
+                        <Style Selector="Button:pressed">
+                            <Setter Property="Background" Value="Gray" />
+                        </Style>
+                    </Button.Styles>
+                    <Button.Template>
+                        <ControlTemplate>
+                            <Border Background="{TemplateBinding Background}"
+                                    CornerRadius="24"
+                                    BorderBrush="#FFFFFF"
+                                    BorderThickness="0">
+                                <avalonia:Icon Value="mdi format-list-bulleted-square"
+                                               Foreground="#FFF"
+                                               FontSize="20">
+                                </avalonia:Icon>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </StackPanel>
+                <Grid>
+                    <ScrollViewer>
+                        <StackPanel Spacing="24">
+                            <ItemsControl ItemsSource="{Binding MiniPlayer.Queue}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <DockPanel LastChildFill="True"
+
+                                                       Height="50"
+                                                       Background="Transparent">
+                                                <Button Width="50"
+                                                        Command="{Binding $parent[ItemsControl].((viewModels:ExplorePageViewModel)DataContext).PlayCommand}"
+                                                        CommandParameter="{Binding .}">
+                                                    <Classes.IsPlaying>
+                                                        <MultiBinding Converter="{valueConverters:IsEqualToConverter}">
+                                                            <Binding Path="." />
+                                                            <Binding
+                                                                Path="((viewModels:MainViewModel)DataContext).MiniPlayer.Song"
+                                                                RelativeSource="{RelativeSource AncestorType=views:Main}">
+                                                            </Binding>
+                                                        </MultiBinding>
+                                                    </Classes.IsPlaying>
+                                                    <Button.Styles>
+                                                        <Style
+                                                            Selector="Button:not(.IsPlaying) /template/ avalonia|Icon">
+                                                            <Setter Property="Foreground" Value="Transparent" />
+                                                            <Setter Property="Value" Value="mdi play" />
+                                                        </Style>
+                                                        <Style Selector="Button.IsPlaying /template/ avalonia|Icon">
+                                                            <Setter Property="Value" Value="mdi equalizer" />
+                                                            <Setter Property="Foreground" Value="Green" />
+                                                        </Style>
+                                                        <Style Selector="Button.IsPlaying">
+                                                            <Setter Property="IsEnabled" Value="False" />
+                                                        </Style>
+                                                    </Button.Styles>
+                                                    <Button.Template>
+                                                        <ControlTemplate>
+                                                            <Border Background="Transparent">
+                                                                <avalonia:Icon FontSize="24">
+                                                                </avalonia:Icon>
+                                                            </Border>
+                                                        </ControlTemplate>
+                                                    </Button.Template>
+                                                </Button>
+                                                <TextBlock Text="{Binding Time}"
+                                                           Foreground="#FFF"
+                                                           DockPanel.Dock="Right"
+                                                           VerticalAlignment="Center"
+                                                           Margin="12,0"
+                                                           Opacity="0.5"
+                                                           FontSize="12" />
+                                                <StackPanel Orientation="Vertical"
+                                                            Margin="12,0"
+                                                            VerticalAlignment="Center"
+                                                            Spacing="5">
+                                                    <TextBlock Text="{Binding Name}"
+                                                               Foreground="#FFF"
+                                                               TextTrimming="CharacterEllipsis"
+                                                               FontSize="12"
+                                                               FontWeight="Bold" />
+                                                    <TextBlock Text="{Binding Artist}"
+                                                               TextTrimming="CharacterEllipsis"
+                                                               Foreground="#FFF"
+                                                               FontSize="12" />
+
+                                                </StackPanel>
+                                            </DockPanel>
+                                        </Grid>
+
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+            </DockPanel>
+        </Grid>
+    </Grid>
+
+</UserControl>

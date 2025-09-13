@@ -1,0 +1,150 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:avalonia="https://github.com/projektanker/icons.avalonia"
+             xmlns:viewModels="clr-namespace:Kardamon.ViewModels"
+             xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
+             xmlns:kardamon="clr-namespace:Kardamon"
+             xmlns:views="clr-namespace:Kardamon.Views"
+             xmlns:valueConverters="clr-namespace:Kardamon.ValueConverters"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="viewModels:MyMusicPageViewModel"
+             x:Class="Kardamon.Views.MyMusicPage"
+             Foreground="#FFF"
+             Background="Black">
+    <ScrollViewer>
+        <StackPanel Spacing="24">
+            <DockPanel LastChildFill="True">
+                <Button Width="50"
+                        Command="{Binding PlayManyCommand}"
+                        CommandParameter="{Binding Songs}">
+                    <Button.Template>
+                        <ControlTemplate>
+                            <Border Background="Transparent">
+                                <avalonia:Icon FontSize="30"
+                                               Foreground="#FFF"
+                                               Value="mdi play">
+                                </avalonia:Icon>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+                <TextBlock FontWeight="Bold"
+                           Text="PLAY ALL"
+                           FontSize="32"
+                           TextAlignment="Left"
+                           Foreground="#FFF">
+                </TextBlock>
+            </DockPanel>
+            <ItemsControl ItemsSource="{Binding Songs}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <ProgressBar
+                                Maximum="{Binding $parent[views:Main].((viewModels:MainViewModel)DataContext).MiniPlayer.TotalTime}"
+                                Value="{Binding $parent[views:Main].((viewModels:MainViewModel)DataContext).MiniPlayer.CurrentTime}"
+                                Height="{Binding $parent[Grid].Bounds.Height}"
+                                CornerRadius="0"
+                                BorderThickness="0"
+                                Foreground="#40FFFFFF"
+                                Background="Black">
+                                <ProgressBar.IsVisible>
+                                    <MultiBinding Converter="{valueConverters:IsEqualToConverter}">
+                                        <Binding Path="." />
+                                        <Binding
+                                            Path="((viewModels:MainViewModel)DataContext).MiniPlayer.Song"
+                                            RelativeSource="{RelativeSource AncestorType=views:Main}">
+                                        </Binding>
+                                    </MultiBinding>
+                                </ProgressBar.IsVisible>
+                            </ProgressBar>
+                            <DockPanel LastChildFill="True"
+
+                                       Height="50"
+                                       Background="Transparent">
+                                <Button Width="50"
+                                        Command="{Binding $parent[ItemsControl].((viewModels:MyMusicPageViewModel)DataContext).PlayCommand}"
+                                        CommandParameter="{Binding .}">
+                                    <Classes.IsPlaying>
+                                        <MultiBinding Converter="{valueConverters:IsEqualToConverter}">
+                                            <Binding Path="." />
+                                            <Binding
+                                                Path="((viewModels:MainViewModel)DataContext).MiniPlayer.Song"
+                                                RelativeSource="{RelativeSource AncestorType=views:Main}">
+                                            </Binding>
+                                        </MultiBinding>
+                                    </Classes.IsPlaying>
+                                    <Button.Styles>
+                                        <Style Selector="Button:not(.IsPlaying) /template/ avalonia|Icon">
+                                            <Setter Property="Foreground" Value="#FFF" />
+                                            <Setter Property="Value" Value="mdi play" />
+                                        </Style>
+                                        <Style Selector="Button.IsPlaying /template/ avalonia|Icon">
+                                            <Setter Property="Value" Value="mdi equalizer" />
+                                            <Setter Property="Foreground" Value="Green" />
+                                        </Style>
+                                        <Style Selector="Button.IsPlaying">
+                                            <Setter Property="IsEnabled" Value="False" />
+                                        </Style>
+                                    </Button.Styles>
+                                    <Button.Template>
+                                        <ControlTemplate>
+                                            <Border Background="Transparent">
+                                                <avalonia:Icon FontSize="24">
+                                                </avalonia:Icon>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                                <Button Width="50"
+                                        DockPanel.Dock="Right"
+                                        Classes.Favorite="{Binding IsFavorite}"
+                                        Command="{Binding $parent[ItemsControl].((viewModels:MyMusicPageViewModel)DataContext).MarkFavoriteCommand}"
+                                        CommandParameter="{Binding Id}">
+                                    <Button.Styles>
+                                        <Style Selector="Button.Favorite /template/ avalonia|Icon">
+                                            <Setter Property="Foreground" Value="Red" />
+                                        </Style>
+                                    </Button.Styles>
+                                    <Button.Template>
+                                        <ControlTemplate>
+                                            <Border Background="Transparent">
+                                                <avalonia:Icon FontSize="24"
+                                                               Value="mdi heart">
+                                                </avalonia:Icon>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                                <TextBlock Text="{Binding Time}"
+                                           Foreground="#FFF"
+                                           DockPanel.Dock="Right"
+                                           VerticalAlignment="Center"
+                                           Margin="12,0"
+                                           Opacity="0.5"
+                                           FontSize="12" />
+                                <StackPanel Orientation="Vertical"
+                                            Margin="12,0"
+                                            VerticalAlignment="Center"
+                                            Spacing="5">
+                                    <TextBlock Text="{Binding Name}"
+                                               Foreground="#FFF"
+                                               TextTrimming="CharacterEllipsis"
+                                               FontSize="12"
+                                               FontWeight="Bold" />
+                                    <TextBlock Text="{Binding Artist}"
+                                               Foreground="#FFF"
+                                               TextTrimming="CharacterEllipsis"
+                                               FontSize="12" />
+
+                                </StackPanel>
+                            </DockPanel>
+                        </Grid>
+
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

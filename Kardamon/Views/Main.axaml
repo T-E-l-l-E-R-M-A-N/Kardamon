@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:Kardamon.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Kardamon.Views.Main"
+             x:DataType="viewModels:MainViewModel">
+    <DockPanel LastChildFill="True">
+        <ContentControl DockPanel.Dock="Left"
+                        Content="{Binding NavigationMenu}"/>
+        <ContentControl DockPanel.Dock="Bottom"
+                        ClipToBounds="False"
+                        ZIndex="1"
+                        Content="{Binding CommandBar}"></ContentControl>
+        <ContentControl DockPanel.Dock="Bottom"
+                        Content="{Binding ToastNotification}"></ContentControl>
+        
+        
+        
+       
+        <ContentControl Content="{Binding CurrentPage}">
+        </ContentControl>
+    </DockPanel>
+</UserControl>

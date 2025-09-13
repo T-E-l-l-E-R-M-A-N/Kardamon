@@ -1,0 +1,339 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:Kardamon.ViewModels"
+             xmlns:views="clr-namespace:Kardamon.Views"
+             xmlns:valueConverters="clr-namespace:Kardamon.ValueConverters"
+             xmlns:kardamon="clr-namespace:Kardamon"
+             xmlns:avalonia="https://github.com/projektanker/icons.avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="viewModels:SearchPageViewModel"
+             x:Class="Kardamon.Views.SearchPage"
+             Foreground="#FFF"
+             Background="Black">
+    <DockPanel LastChildFill="True">
+        <StackPanel Spacing="5"
+                    DockPanel.Dock="Top">
+            <TextBlock FontWeight="Bold"
+                       Text=""
+                       Height="48"
+                       DockPanel.Dock="Top"
+                       FontSize="32"
+                       TextAlignment="Left"
+                       Foreground="#FFF">
+            </TextBlock>
+            <TextBox
+                Height="40"
+                Margin="30,0"
+                Width="300"
+                HorizontalAlignment="Left"
+                MinHeight="40"
+                VerticalAlignment="Top"
+                Background="Transparent"
+                BorderThickness="1"
+                Text="{Binding SearchText}"
+                Watermark="type here for search...">
+                <TextBox.KeyBindings>
+                    <KeyBinding Gesture="Return" Command="{Binding SearchCommand}" />
+                </TextBox.KeyBindings>
+            </TextBox>
+        </StackPanel>
+        <ScrollViewer>
+             <TabControl Margin="30">
+            <TabControl.Styles>
+                <Style Selector="TabControl TabItem">
+                    <Setter Property="Foreground" Value="#40FFFFFF"></Setter>
+                    <Setter Property="Template">
+                        <ControlTemplate>
+                            <ContentPresenter Margin="0,0,30,0"
+                                       Content="{TemplateBinding Header, Converter={StaticResource StringCaseConverter}, ConverterParameter=u}"
+                                       FontSize="32"
+                                       Name="PART_ContentPresenter"
+                                       Foreground="{TemplateBinding Foreground}"
+                                       TextTrimming="CharacterEllipsis"
+                                       TextAlignment="Left"
+                                       FontWeight="Bold">
+                            </ContentPresenter>
+                        </ControlTemplate>
+                    </Setter>
+                </Style>
+                <Style Selector="TabItem:selected">
+                    <Setter Property="Foreground" Value="#FFFFFF"></Setter>
+                </Style>
+            </TabControl.Styles>
+            <TabItem Header="ON DEVICE"
+                     IsVisible="{Binding ResultsOnDevice, Converter={kardamon:ItemsIsNotEmptyConverter}}">
+                <ItemsControl ItemsSource="{Binding ResultsOnDevice}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <ProgressBar
+                                    Maximum="{Binding $parent[views:Main].((viewModels:MainViewModel)DataContext).MiniPlayer.TotalTime}"
+                                    Value="{Binding $parent[views:Main].((viewModels:MainViewModel)DataContext).MiniPlayer.CurrentTime}"
+                                    Height="{Binding $parent[Grid].Bounds.Height}"
+                                    CornerRadius="0"
+                                    BorderThickness="0"
+                                    Foreground="#40FFFFFF"
+                                    Background="Black">
+                                    <ProgressBar.IsVisible>
+                                        <MultiBinding Converter="{valueConverters:IsEqualToConverter}">
+                                            <Binding Path="." />
+                                            <Binding
+                                                Path="((viewModels:MainViewModel)DataContext).MiniPlayer.Song"
+                                                RelativeSource="{RelativeSource AncestorType=views:Main}">
+                                            </Binding>
+                                        </MultiBinding>
+                                    </ProgressBar.IsVisible>
+                                </ProgressBar>
+                                <DockPanel LastChildFill="True"
+
+                                           Height="50"
+                                           Background="Transparent">
+                                    <Button Width="50"
+                                            Command="{Binding $parent[ItemsControl].((viewModels:SearchPageViewModel)DataContext).PlayCommand}"
+                                            CommandParameter="{Binding .}">
+                                        <Classes.IsPlaying>
+                                            <MultiBinding Converter="{valueConverters:IsEqualToConverter}">
+                                                <Binding Path="." />
+                                                <Binding
+                                                    Path="((viewModels:MainViewModel)DataContext).MiniPlayer.Song"
+                                                    RelativeSource="{RelativeSource AncestorType=views:Main}">
+                                                </Binding>
+                                            </MultiBinding>
+                                        </Classes.IsPlaying>
+                                        <Button.Styles>
+                                            <Style Selector="Button:not(.IsPlaying) /template/ avalonia|Icon">
+                                                <Setter Property="Foreground" Value="#FFF" />
+                                                <Setter Property="Value" Value="mdi play" />
+                                            </Style>
+                                            <Style Selector="Button.IsPlaying /template/ avalonia|Icon">
+                                                <Setter Property="Value" Value="mdi equalizer" />
+                                                <Setter Property="Foreground" Value="Green" />
+                                            </Style>
+                                            <Style Selector="Button.IsPlaying">
+                                                <Setter Property="IsEnabled" Value="False" />
+                                            </Style>
+                                        </Button.Styles>
+                                        <Button.Template>
+                                            <ControlTemplate>
+                                                <Border Background="Transparent">
+                                                    <avalonia:Icon FontSize="24">
+                                                    </avalonia:Icon>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                    <Button Width="50"
+                                            DockPanel.Dock="Right"
+                                            Classes.Favorite="{Binding IsFavorite}"
+                                            Command="{Binding $parent[ItemsControl].((viewModels:SearchPageViewModel)DataContext).MarkFavoriteCommand}"
+                                            CommandParameter="{Binding Id}">
+                                        <Button.Styles>
+                                            <Style Selector="Button.Favorite">
+                                                <Setter Property="Foreground" Value="Red" />
+                                            </Style>
+                                        </Button.Styles>
+                                        <Button.Template>
+                                            <ControlTemplate>
+                                                <Border Background="Transparent">
+                                                    <avalonia:Icon FontSize="24"
+                                                                   Foreground="{Binding $parent[Button].Foreground}"
+                                                                   Value="mdi heart">
+                                                    </avalonia:Icon>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                    <Button Width="50"
+                                            DockPanel.Dock="Right"
+                                            Classes.Downloaded="{Binding IsDownloaded}"
+                                            Command="{Binding $parent[ItemsControl].((viewModels:SearchPageViewModel)DataContext).DownloadCommand}"
+                                            CommandParameter="{Binding .}">
+                                        <Button.Styles>
+                                            <Style Selector="Button:not(.Downloaded) /template/ avalonia|Icon">
+                                                <Setter Property="Foreground" Value="White" />
+                                            </Style>
+                                            <Style Selector="Button.Downloaded /template/ avalonia|Icon">
+                                                <Setter Property="Foreground" Value="Transparent" />
+                                            </Style>
+                                        </Button.Styles>
+                                        <Button.Template>
+                                            <ControlTemplate>
+                                                <Border Background="Transparent">
+                                                    <avalonia:Icon FontSize="24"
+                                                                   Value="mdi download">
+                                                    </avalonia:Icon>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                    <TextBlock Text="{Binding Time}"
+                                               Foreground="#FFF"
+                                               DockPanel.Dock="Right"
+                                               VerticalAlignment="Center"
+                                               Margin="12,0"
+                                               Opacity="0.5"
+                                               FontSize="12" />
+                                    <StackPanel Orientation="Vertical"
+                                                Margin="12,0"
+                                                VerticalAlignment="Center"
+                                                Spacing="5">
+                                        <TextBlock Text="{Binding Name}"
+                                                   Foreground="#FFF"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   FontSize="12"
+                                                   FontWeight="Bold" />
+                                        <TextBlock Text="{Binding Artist}"
+                                                   Foreground="#FFF"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   FontSize="12" />
+
+                                    </StackPanel>
+                                </DockPanel>
+                            </Grid>
+
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </TabItem>
+            <TabItem Header="WEB"
+                     IsVisible="{Binding ResultsInWeb, Converter={kardamon:ItemsIsNotEmptyConverter}}">
+                <ItemsControl ItemsSource="{Binding ResultsInWeb}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <ProgressBar
+                                    Maximum="{Binding $parent[views:Main].((viewModels:MainViewModel)DataContext).MiniPlayer.TotalTime}"
+                                    Value="{Binding $parent[views:Main].((viewModels:MainViewModel)DataContext).MiniPlayer.CurrentTime}"
+                                    Height="{Binding $parent[Grid].Bounds.Height}"
+                                    CornerRadius="0"
+                                    BorderThickness="0"
+                                    Foreground="#40FFFFFF"
+                                    Background="Black">
+                                    <ProgressBar.IsVisible>
+                                        <MultiBinding Converter="{valueConverters:IsEqualToConverter}">
+                                            <Binding Path="." />
+                                            <Binding
+                                                Path="((viewModels:MainViewModel)DataContext).MiniPlayer.Song"
+                                                RelativeSource="{RelativeSource AncestorType=views:Main}">
+                                            </Binding>
+                                        </MultiBinding>
+                                    </ProgressBar.IsVisible>
+                                </ProgressBar>
+                                <DockPanel LastChildFill="True"
+
+                                           Height="50"
+                                           Background="Transparent">
+                                    <Button Width="50"
+                                            Command="{Binding $parent[ItemsControl].((viewModels:SearchPageViewModel)DataContext).PlayCommand}"
+                                            CommandParameter="{Binding .}">
+                                        <Classes.IsPlaying>
+                                            <MultiBinding Converter="{valueConverters:IsEqualToConverter}">
+                                                <Binding Path="." />
+                                                <Binding
+                                                    Path="((viewModels:MainViewModel)DataContext).MiniPlayer.Song"
+                                                    RelativeSource="{RelativeSource AncestorType=views:Main}">
+                                                </Binding>
+                                            </MultiBinding>
+                                        </Classes.IsPlaying>
+                                        <Button.Styles>
+                                            <Style Selector="Button:not(.IsPlaying) /template/ avalonia|Icon">
+                                                <Setter Property="Foreground" Value="#FFF" />
+                                                <Setter Property="Value" Value="mdi play" />
+                                            </Style>
+                                            <Style Selector="Button.IsPlaying /template/ avalonia|Icon">
+                                                <Setter Property="Value" Value="mdi equalizer" />
+                                                <Setter Property="Foreground" Value="Green" />
+                                            </Style>
+                                            <Style Selector="Button.IsPlaying">
+                                                <Setter Property="IsEnabled" Value="False" />
+                                            </Style>
+                                        </Button.Styles>
+                                        <Button.Template>
+                                            <ControlTemplate>
+                                                <Border Background="Transparent">
+                                                    <avalonia:Icon FontSize="24">
+                                                    </avalonia:Icon>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                    <Button Width="50"
+                                            DockPanel.Dock="Right"
+                                            Classes.Favorite="{Binding IsFavorite}"
+                                            Command="{Binding $parent[ItemsControl].((viewModels:SearchPageViewModel)DataContext).MarkFavoriteCommand}"
+                                            CommandParameter="{Binding Id}">
+                                        <Button.Styles>
+                                            <Style Selector="Button.Favorite">
+                                                <Setter Property="Foreground" Value="Red" />
+                                            </Style>
+                                        </Button.Styles>
+                                        <Button.Template>
+                                            <ControlTemplate>
+                                                <Border Background="Transparent">
+                                                    <avalonia:Icon FontSize="24"
+                                                                   Foreground="{Binding $parent[Button].Foreground}"
+                                                                   Value="mdi heart">
+                                                    </avalonia:Icon>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                    <Button Width="50"
+                                            DockPanel.Dock="Right"
+                                            Classes.Downloaded="{Binding IsDownloaded}"
+                                            Command="{Binding $parent[ItemsControl].((viewModels:SearchPageViewModel)DataContext).DownloadCommand}"
+                                            CommandParameter="{Binding .}">
+                                        <Button.Styles>
+                                            <Style Selector="Button:not(.Downloaded) /template/ avalonia|Icon">
+                                                <Setter Property="Foreground" Value="White" />
+                                            </Style>
+                                            <Style Selector="Button.Downloaded /template/ avalonia|Icon">
+                                                <Setter Property="Foreground" Value="Transparent" />
+                                            </Style>
+                                        </Button.Styles>
+                                        <Button.Template>
+                                            <ControlTemplate>
+                                                <Border Background="Transparent">
+                                                    <avalonia:Icon FontSize="24"
+                                                                   Value="mdi download">
+                                                    </avalonia:Icon>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                    <TextBlock Text="{Binding Time}"
+                                               Foreground="#FFF"
+                                               DockPanel.Dock="Right"
+                                               VerticalAlignment="Center"
+                                               Margin="12,0"
+                                               Opacity="0.5"
+                                               FontSize="12" />
+                                    <StackPanel Orientation="Vertical"
+                                                Margin="12,0"
+                                                VerticalAlignment="Center"
+                                                Spacing="5">
+                                        <TextBlock Text="{Binding Name}"
+                                                   Foreground="#FFF"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   FontSize="12"
+                                                   FontWeight="Bold" />
+                                        <TextBlock Text="{Binding Artist}"
+                                                   Foreground="#FFF"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   FontSize="12" />
+
+                                    </StackPanel>
+                                </DockPanel>
+                            </Grid>
+
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </TabItem>
+        </TabControl>
+        </ScrollViewer>
+       
+    </DockPanel>
+</UserControl>

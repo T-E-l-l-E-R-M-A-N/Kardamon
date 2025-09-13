@@ -1,0 +1,128 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:Kardamon"
+             xmlns:c="http://schemas.superdev.ch/valueconverters/2016/xaml"
+             xmlns:avalonia="https://github.com/projektanker/icons.avalonia"
+             x:Class="Kardamon.App"
+             RequestedThemeVariant="Default">
+             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+
+    <Application.DataTemplates>
+        <local:ViewLocator/>
+    </Application.DataTemplates>
+
+    <Application.Styles>
+        <FluentTheme />
+        
+        <StyleInclude Source="/Controls/Panorama.axaml"></StyleInclude>
+        
+        <Style Selector="TextBox">
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="BorderThickness" Value="0"></Setter>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Background" Value="#FFF"/>
+            <Setter Property="CornerRadius" Value="0"></Setter>
+            <Setter Property="Margin" Value="2"></Setter>
+            <Setter Property="Foreground" Value="#FFF"/>
+            <Setter Property="Template">
+                <ControlTemplate TargetType="TextBox">
+                    <Border x:Name="border" Background="{TemplateBinding Background}"
+                            Cursor="IBeam">
+                        <Grid VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                              Margin="12,0">
+                            <TextPresenter x:Name="PART_TextPresenter" 
+                                           SelectionBrush="White"
+                                           SelectionForegroundBrush="Black"
+                                           SelectionStart="{TemplateBinding SelectionStart}"
+                                           SelectionEnd="{TemplateBinding SelectionEnd}"
+                                           CaretBrush="Red"
+                                           CaretIndex="{TemplateBinding CaretIndex}"/>
+                            <TextBlock Text="{TemplateBinding Watermark}"
+                                       Opacity="0.3"
+                                       Foreground="{TemplateBinding Foreground}"
+                                       
+                                       IsVisible="{Binding $parent[TextBox].Text, Converter={x:Static StringConverters.IsNullOrEmpty}}"/>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+            <Style Selector="^:focus">
+                <Setter Property="Foreground" Value="Red"/>
+            </Style>
+            <Style Selector="^:focus /template/ Border#border">
+                <Setter Property="BorderThickness" Value="0"></Setter>
+                <Setter Property="BorderBrush" Value="Transparent"/>
+                <Setter Property="Background" Value="#FFF"/>
+                <Setter Property="CornerRadius" Value="0"></Setter>
+            </Style>
+            <Style Selector="^:pointerover /template/ Border#border">
+                <Setter Property="BorderThickness" Value="0"></Setter>
+                <Setter Property="BorderBrush" Value="Transparent"/>
+                <Setter Property="Background" Value="Green"/>
+                <Setter Property="CornerRadius" Value="0"></Setter>
+            </Style>
+            <Style Selector="^:focus:pointerover">
+                <Setter Property="BorderThickness" Value="0"></Setter>
+                <Setter Property="BorderBrush" Value="Transparent"/>
+                <Setter Property="Background" Value="Green"/>
+                <Setter Property="Foreground" Value="#FFF"/>
+                <Setter Property="CornerRadius" Value="0"></Setter>
+            </Style>
+        </Style>
+        
+        <Style Selector="Button.FloatingActionButton">
+            <Setter Property="Width" Value="48"/>
+            <Setter Property="ClipToBounds" Value="False"/>
+            <Setter Property="Height" Value="48"/>
+            <Setter Property="Foreground" Value="MediumVioletRed"/>
+            <Setter Property="Background" Value="MediumVioletRed"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="CornerRadius" Value="24"/>
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          VerticalAlignment="Center"
+                                          HorizontalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+            
+            <Style Selector="^.FloatingActionButton:pointerover /template/ Border">
+                <Setter Property="TextElement.Foreground" Value="HotPink"/>
+                <Setter Property="Background" Value="HotPink"/>
+            </Style>
+            <Style Selector="^.FloatingActionButton /template/ Border">
+                <Setter Property="BoxShadow" Value="0 0 8 2 #40000000"/>
+            </Style>
+            <Style Selector="^.FloatingActionButton:pressed">
+                <Setter Property="RenderTransform">
+                    <Rotate3DTransform Depth="1000"
+                                       AngleY="8"/>
+                </Setter>
+            </Style>
+            <Style Selector="^.FloatingActionButton:pressed /template/ Border">
+                <Setter Property="TextElement.Foreground" Value="DeepPink"/>
+                <Setter Property="Background" Value="DeepPink"/>
+                <Setter Property="BoxShadow" Value="0 0 8 2 #40000000"/>
+            </Style>
+        
+            <Style Selector="^.FloatingActionButton:disabled /template/ Border">
+                <Setter Property="TextElement.Foreground" Value="White"/>
+                <Setter Property="Background" Value="Gray"/>
+                <Setter Property="Opacity" Value="0.4"/>
+            </Style>
+        </Style>
+        
+        <Style Selector="Button.FloatingActionButton avalonia|Icon">
+            <Setter Property="Foreground" Value="#FFF"></Setter>
+        </Style>
+    </Application.Styles>
+             
+    <Application.Resources>
+        <c:StringCaseConverter x:Key="StringCaseConverter"/>
+    </Application.Resources>
+</Application>
