@@ -13,9 +13,6 @@
                         ClipToBounds="False"
                         ZIndex="1"
                         Content="{Binding CommandBar}"></ContentControl>
-        <ContentControl DockPanel.Dock="Bottom"
-                        Content="{Binding ToastNotification}"></ContentControl>
-        
         
         
        

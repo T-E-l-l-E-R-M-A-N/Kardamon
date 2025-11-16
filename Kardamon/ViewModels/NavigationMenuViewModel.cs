@@ -38,7 +38,7 @@ public partial class NavigationMenuViewModel : ViewModelBase
     [RelayCommand(CanExecute = "CanReturnToIndex")]
     private void ReturnToIndex()
     {
-        _navigationService.GoToIndex();
+        _navigationService.GoToExplore();
     }
 
     [RelayCommand]

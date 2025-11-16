@@ -14,9 +14,23 @@ public class NavigationService
         _pageFactory = pageFactory;
     }
 
-    public void GoToIndex()
+    public void GoToExplore()
     {
-        var page = _pageFactory.GetIndexPage();
+        var page = _pageFactory.GetExplorePage();
+        page.Init();
+        NavigateTo(page);
+    }
+
+    public void GoToNowPlaying()
+    {
+        var page = _pageFactory.GetNowPlayingPage();
+        NavigateTo(page);
+    }
+
+    public void GoToSearch()
+    {
+        var page = _pageFactory.GetSearchPage();
+        if (page.ResultsInWeb != null) page.ResultsInWeb.Clear();
         NavigateTo(page);
     }
 

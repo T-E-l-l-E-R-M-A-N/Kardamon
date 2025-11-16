@@ -29,13 +29,18 @@ public partial class MiniPlayerViewModel : ViewModelBase
     {
         if (Queue.Any())
         {
-            if (Song.Id != Queue.LastOrDefault().Id)
-            {
-                var index = Queue.IndexOf(Song);
-                index++;
-                var item = Queue.ElementAt(index);
-                PlaySingleAsync(item);
-            }
+            if (forwardCommand != null) 
+                forwardCommand.Execute(null);
+        }
+        else
+        {
+            IsPlaying = false;
+            Song = null!;
+            TotalTime = 0;
+            CurrentTime = 0;
+            CurrentTimeString = "00:00";
+            TotalTimeString = "00:00";
+            IsActive = false;
         }
     }
 
@@ -52,7 +57,8 @@ public partial class MiniPlayerViewModel : ViewModelBase
             Queue =  new ObservableCollection<SongModel>(new List<SongModel>() {s});
         }
 
-        _playbackService.Play(Queue.FirstOrDefault(x=>x.Id == s.Id));
+        Song = s;
+        _playbackService.Play(s);
     }
 
     public async Task EnqueueAndPlayAsync(IEnumerable<SongModel> s)
@@ -78,11 +84,8 @@ public partial class MiniPlayerViewModel : ViewModelBase
         TotalTimeString =   durationString;
     }
 
-    private void PlaybackServiceOnSongChanged(SongModel obj)
+    private void PlaybackServiceOnSongChanged(SongModel? obj)
     {
-        if (obj != null)
-            IsActive = true;
-        
         Song = obj;
     }
 

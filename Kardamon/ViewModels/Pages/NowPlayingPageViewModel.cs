@@ -35,4 +35,9 @@ public partial class NowPlayingPageViewModel : ViewModelBase, IPage
             await _webSearchService.ChangeFavorite(song);
         }
     }
+    [RelayCommand]
+    private async Task Play(SongModel s)
+    {
+        await MiniPlayer.PlaySingleAsync(s, true);
+    }
 }

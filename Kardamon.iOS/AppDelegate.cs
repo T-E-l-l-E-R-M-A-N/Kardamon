@@ -18,8 +18,6 @@ using MediaManager.Media;
 using MediaManager.Playback;
 using MediaManager.Player;
 using MediaPlayer;
-using Plugin.LocalNotification;
-using Plugin.PushNotification;
 using Projektanker.Icons.Avalonia.MaterialDesign;
 
 namespace Kardamon.iOS;
@@ -39,20 +37,12 @@ public partial class AppDelegate : AvaloniaAppDelegate<App>
         var services = new ContainerBuilder();
         services.RegisterType<XPlatformPlaybackService>().As<IPlayback>().SingleInstance();
         IoC.RegisterServices(services);
-        CheckNotifyPermission();
+       // CheckNotifyPermission();
         return base.CustomizeAppBuilder(builder)
             .WithInterFont()
             ;
     }
 
-    async void CheckNotifyPermission()
-    {
-        if (await LocalNotificationCenter.Current.AreNotificationsEnabled() == false)
-        {
-            // Basic permission request
-            await LocalNotificationCenter.Current.RequestNotificationPermission();
-        }
-    }
 }
 
 public class XPlatformPlaybackService : IPlayback
@@ -75,7 +65,6 @@ public class XPlatformPlaybackService : IPlayback
 
     private void CurrentOnMediaItemFinished(object? sender, MediaItemEventArgs e)
     {
-        SongChanged?.Invoke(null!);
         PlayFinished?.Invoke();
     }
 
@@ -112,6 +101,12 @@ public class XPlatformPlaybackService : IPlayback
     {
         CrossMediaManager.Current.Init();
         CrossMediaManager.Current.PositionChanged += CurrentOnPositionChanged;
+        CrossMediaManager.Current.StateChanged += CurrentOnStateChanged;
         CrossMediaManager.Current.Notification.ShowNavigationControls = false;
+    }
+
+    private void CurrentOnStateChanged(object? sender, StateChangedEventArgs e)
+    {
+        StateChanged?.Invoke(e.State != MediaPlayerState.Paused);
     }
 }

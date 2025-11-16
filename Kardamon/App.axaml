@@ -14,7 +14,10 @@
     <Application.Styles>
         <FluentTheme />
         
-        <StyleInclude Source="/Controls/Panorama.axaml"></StyleInclude>
+        
+        <Style Selector="Button:pressed">
+            <Setter Property="RenderTransform" Value="scale(1)"></Setter>
+        </Style>
         
         <Style Selector="TextBox">
             <Setter Property="VerticalContentAlignment" Value="Center"/>

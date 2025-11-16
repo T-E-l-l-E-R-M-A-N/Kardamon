@@ -28,12 +28,14 @@
         <PackageReference Include="MediaPlayer.Avalonia.Bass" />
         <PackageReference Include="Microsoft.Maui.Core" />
         <PackageReference Include="Newtonsoft.Json" />
-        <PackageReference Include="Plugin.LocalNotification" />
         <PackageReference Include="Plugin.MediaManager" />
-        <PackageReference Include="Plugin.PushNotification" />
         <PackageReference Include="Projektanker.Icons.Avalonia.MaterialDesign" />
         <PackageReference Include="TagLibSharp" />
         <PackageReference Include="ValueConverters.Avalonia" />
         <PackageReference Include="Xaml.Behaviors.Avalonia" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Controls\" />
     </ItemGroup>
 </Project>

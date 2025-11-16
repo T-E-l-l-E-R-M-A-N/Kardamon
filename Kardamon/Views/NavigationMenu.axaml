@@ -7,195 +7,28 @@
                       xmlns:valueConverters="clr-namespace:Kardamon.ValueConverters"
                       xmlns:views="clr-namespace:Kardamon.Views"
                       xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
-                      xmlns:controls="clr-namespace:Kardamon.Controls"
                       mc:Ignorable="d" d:DesignHeight="450"
                       FontWeight="Thin"
+                      Width="{Binding $parent[views:Main].Bounds.Width}"
                       FontSize="12"
+                      IsVisible="{Binding IsOpen}"
                       Foreground="#FFF"
                       x:Class="Kardamon.Views.NavigationMenu"
                       x:DataType="viewModels:NavigationMenuViewModel"
                       Classes.IsOpen="{Binding IsOpen, FallbackValue=True}"
                       Background="Black">
-    <views:NavigationMenu.Transitions>
-        <Transitions>
-            <DoubleTransition Property="Width" Duration="0:0:0.1"></DoubleTransition>
-        </Transitions>
-    </views:NavigationMenu.Transitions>
-    <views:NavigationMenu.Styles>
-        <Style Selector="views|NavigationMenu:not(.IsOpen)">
-            <Setter Property="Width" Value="0" />
-        </Style>
-        <Style Selector="views|NavigationMenu.IsOpen">
-            <Setter Property="Width"
-                    Value="{Binding $self, Converter={valueConverters:NavigationMenuExpandWidthConverter}, FallbackValue=210}" />
-        </Style>
-        <Style Selector="Button.NavMenuItem /template/ ContentPresenter">
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Foreground" Value="#FFF" />
-            <Setter Property="Opacity" Value="0.4"></Setter>
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="BorderBrush" Value="Transparent" />
-            <Setter Property="CornerRadius" Value="0" />
-            <Setter Property="Padding" Value="72,0" />
-            <Setter Property="Margin" Value="0"></Setter>
-            <Setter Property="Height" Value="60" />
-        </Style>
-        <Style Selector="Button.NavMenuItem.Selected /template/ ContentPresenter">
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Opacity" Value="1"></Setter>
-            <Setter Property="Foreground" Value="#FFF" />
-        </Style>
-        <Style Selector="Button.NavMenuItem:pressed">
-            <Setter Property="RenderTransform" Value="scale(1)" />
-        </Style>
-    </views:NavigationMenu.Styles>
 
     <Grid>
-        <WrapPanel VerticalAlignment="Top"
-                   Height="300"
-                   Width="400"
-                   Orientation="Vertical"
-                   HorizontalAlignment="Left"
-                   LineSpacing="2"
-                   Effect="blur(32)"
-                   Opacity="0.4"
-                   ItemSpacing="2">
-            <Rectangle Width="90"
-                       Fill="DarkRed"
-                       Height="90" />
-            <Rectangle Width="90"
-                       Fill="Green"
-                       Height="90" />
-            <Rectangle Width="90"
-                       Fill="Cyan"
-                       Height="90" />
-            <Rectangle Width="90"
-                       Fill="RoyalBlue"
-                       Height="90" />
-            <Rectangle Width="90"
-                       Fill="DarkGoldenrod"
-                       Height="90" />
-            <Rectangle Width="90"
-                       Fill="SaddleBrown"
-                       Height="90" />
-            <Rectangle Width="90"
-                       Fill="Fuchsia"
-                       Height="90" />
-            <Rectangle Width="90"
-                       Fill="BurlyWood"
-                       Height="90" />
-        </WrapPanel>
-        <StackPanel Spacing="8"
-
-                    Margin="72,20,0,40">
-            <TextBlock
-                Text="MUSIC"
-                FontSize="32"
-                TextTrimming="CharacterEllipsis"
-                TextAlignment="Left"
-                FontWeight="Bold">
-            </TextBlock>
-            <TextBlock
-                Text="MENU"
-                FontSize="20"
-                TextTrimming="CharacterEllipsis"
-                Opacity="0.4"
-                TextAlignment="Left"
-                FontWeight="Bold">
-            </TextBlock>
-        </StackPanel>
-        <Border VerticalAlignment="Bottom">
-            <Border.IsVisible>
-                <MultiBinding Converter="{valueConverters:EnumValueIsNotEqualToConverter}">
-                    <Binding Path="((viewModels:MainViewModel)DataContext).CurrentPage.Type"
-                             RelativeSource="{RelativeSource AncestorType=views:Main}" />
-                    <Binding Source="NowPlaying"></Binding>
-                </MultiBinding>
-            </Border.IsVisible>
-            <StackPanel Spacing="8"
-                        DataContext="{Binding $parent[views:Main].((viewModels:MainViewModel)DataContext).MiniPlayer}"
-                        Margin="20,20,0,40">
-                <DockPanel LastChildFill="True">
-                    <Grid Width="30"> 
-                        <Button IsVisible="{Binding Song, Converter={x:Static ObjectConverters.IsNotNull}}"
-                                Classes.Playing="{Binding IsPlaying}"
-                                Command="{Binding TogglePlayCommand}"
-                                Height="30"
-                                Width="30">
-                            <Button.Styles>
-                                <Style Selector="Button">
-                                    <Setter Property="Background" Value="Transparent" />
-                                </Style>
-                                <Style Selector="Button:pressed">
-                                    <Setter Property="Background" Value="Gray" />
-                                </Style>
-                                <Style Selector="Button /template/ avalonia|Icon">
-                                    <Setter Property="Value" Value="mdi play" />
-                                </Style>
-                                <Style Selector="Button.Playing /template/ avalonia|Icon">
-                                    <Setter Property="Value" Value="mdi pause" />
-                                </Style>
-                            </Button.Styles>
-                            <Button.Template>
-                                <ControlTemplate>
-                                    <Border Background="{TemplateBinding Background}"
-                                            CornerRadius="24"
-                                            BorderBrush="#FFFFFF"
-                                            BorderThickness="1">
-                                        <avalonia:Icon FontSize="16"
-                                                       Foreground="#FFF">
-                                        </avalonia:Icon>
-                                    </Border>
-                                </ControlTemplate>
-                            </Button.Template>
-                        </Button>
-                    </Grid>
-                    <TextBlock
-                        Text="{Binding Song.Name, Converter={StaticResource StringCaseConverter}, ConverterParameter=u, FallbackValue=NOT PLAYING}"
-                        FontSize="20"
-                        Margin="20,0"
-                        TextTrimming="CharacterEllipsis"
-                        TextAlignment="Left"
-                        FontWeight="Bold">
-                    </TextBlock>
-                </DockPanel>
-                <TextBlock
-                    Text="{Binding Song.Artist, Converter={StaticResource StringCaseConverter}, ConverterParameter=u}"
-                    FontSize="12"
-                    Margin="50,0"
-                    TextTrimming="CharacterEllipsis"
-                    Opacity="0.4"
-                    TextAlignment="Left"
-                    FontWeight="Bold">
-                </TextBlock>
-                <ProgressBar MinWidth="20"
-                             IsVisible="{Binding Song, Converter={x:Static ObjectConverters.IsNotNull}}"
-                    Height="4"
-                             MinHeight="4"
-                             CornerRadius="0"
-                             BorderThickness="0"
-                             Foreground="#FFF"
-                             Maximum="{Binding TotalTime}"
-                             Value="{Binding CurrentTime}"
-                             Margin="50,10,20,0"
-                             Background="Gray"/>
-                <TextBlock
-                    IsVisible="{Binding Song, Converter={x:Static ObjectConverters.IsNotNull}}"
-                    Text="{Binding CurrentTimeString, Converter={StaticResource StringCaseConverter}, ConverterParameter=u, FallbackValue=00:00}"
-                    FontSize="12"
-                    Margin="50,8"
-                    TextTrimming="CharacterEllipsis"
-                    Opacity="0.4"
-                    TextAlignment="Left"
-                    FontWeight="Bold">
-                </TextBlock>
-            </StackPanel>
-        </Border>
         <ItemsControl ItemsSource="{Binding Pages}"
-                      Margin="0,170,0,0">
+                      VerticalAlignment="Center"
+                      Margin="16">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Button Classes="NavMenuItem"
+                            Height="48"
+                            CornerRadius="16"
+                            Margin="0,0,0,6"
+                            Background="Transparent"
                             Command="{Binding $parent[ItemsControl].((viewModels:NavigationMenuViewModel)DataContext).OpenPageCommand}"
                             CommandParameter="{Binding}"
                             Width="{Binding $parent[ItemsControl].Bounds.Width}">
@@ -206,15 +39,17 @@
                                          RelativeSource="{RelativeSource AncestorType=views:Main}" />
                             </MultiBinding>
                         </Classes.Selected>
-                        <StackPanel Spacing="14" Orientation="Horizontal">
-                            <!--<avalonia:Icon 
-                                        FontSize="18" 
-                                        Value="{Binding ., Converter={valueConverters:NavigationMenuIconConverter}}"/>-->
-                            <TextBlock FontSize="20"
+                        <StackPanel Spacing="16" Orientation="Horizontal">
+                            <avalonia:Icon 
+                                        FontSize="24" 
+                                        Foreground="#FFF"
+                                        Value="{Binding ., Converter={valueConverters:NavigationMenuIconConverter}}"/>
+                            <TextBlock FontSize="14"
                                        TextAlignment="Left"
-                                       FontWeight="Bold"
+                                       FontWeight="Thin"
+                                       Foreground="#FFF"
                                        VerticalAlignment="Center"
-                                       Text="{Binding Name, Converter={StaticResource StringCaseConverter}, ConverterParameter=u}" />
+                                       Text="{Binding Name}" />
                         </StackPanel>
                     </Button>
                 </DataTemplate>
