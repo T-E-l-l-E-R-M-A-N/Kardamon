@@ -1,5 +1,6 @@
 using AngleSharp;
 using AngleSharp.Dom;
+using Kardamon.Helpers;
 using Kardamon.ViewModels;
 using LibVLCSharp.Shared;
 using Microsoft.Maui.Storage;
@@ -76,6 +77,8 @@ public class WebSearchService
             else
             {
                 song.IsFavorite = true;
+                song.Image = null!;
+                
                 favorites.Insert(0, song);
             }
         
@@ -85,6 +88,7 @@ public class WebSearchService
         {
             var list = new List<SongModel>();
             song.IsFavorite = true;
+            song.Image = null;
             list.Add(song);
             File.WriteAllText(_json, JsonConvert.SerializeObject(list, Formatting.Indented));
         }
@@ -96,6 +100,10 @@ public class WebSearchService
         {
             var file = await File.ReadAllTextAsync(_json);
             var favorites = JsonConvert.DeserializeObject<List<SongModel>>(file);
+            foreach (var favorite in favorites)
+            {
+                favorite.Image = ImageCacheHelper.LoadFromWebAsync(new Uri(favorite.ImageSource), 200);
+            }
             return await Task.FromResult(favorites.AsReadOnly());
         }
         
@@ -163,7 +171,8 @@ public class WebSearchService
             Artist = artist,
             Name = title,
             FilePath = sourceUrl,
-            ImagePath = imgSource,
+            Image = ImageCacheHelper.LoadFromWebAsync(new Uri(imgSource), 200),
+            ImageSource = imgSource,
             Time = time,
             IsFavorite = favorites != null && (favorites.Find(x=>x.Id == int.Parse(id)) is not null ? true : false)
         };

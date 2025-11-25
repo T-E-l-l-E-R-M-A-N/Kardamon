@@ -14,6 +14,7 @@ using CoreMedia;
 using Kardamon.Services;
 using Kardamon.ViewModels;
 using MediaManager;
+using MediaManager.Library;
 using MediaManager.Media;
 using MediaManager.Playback;
 using MediaManager.Player;
@@ -55,11 +56,12 @@ public class XPlatformPlaybackService : IPlayback
     public bool IsPaused { get; set; }
     public void Play(SongModel s)
     {
-        CrossMediaManager.Current.Play(s.FilePath);
+        CrossMediaManager.Current.Stop();
+        CrossMediaManager.Current.Queue.Clear();
+        CrossMediaManager.Current.Queue.Add(new MediaItem(s.FilePath));
         SongChanged?.Invoke(s);
         StateChanged?.Invoke(true);
-        
-        CrossMediaManager.Current.MediaItemFinished += CurrentOnMediaItemFinished;
+        CrossMediaManager.Current.Play();
         //CrossMediaManager.Ios.Notification.
     }
 
@@ -103,6 +105,8 @@ public class XPlatformPlaybackService : IPlayback
         CrossMediaManager.Current.PositionChanged += CurrentOnPositionChanged;
         CrossMediaManager.Current.StateChanged += CurrentOnStateChanged;
         CrossMediaManager.Current.Notification.ShowNavigationControls = false;
+        CrossMediaManager.Current.MediaItemFinished += CurrentOnMediaItemFinished;
+
     }
 
     private void CurrentOnStateChanged(object? sender, StateChangedEventArgs e)

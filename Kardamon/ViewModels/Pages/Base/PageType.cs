@@ -9,5 +9,6 @@ public enum PageType
     Web,
     About,
     NowPlaying,
-    Explore
+    Explore,
+    Favorites
 }

@@ -17,7 +17,6 @@ public class NavigationService
     public void GoToExplore()
     {
         var page = _pageFactory.GetExplorePage();
-        page.Init();
         NavigateTo(page);
     }
 
@@ -30,7 +29,12 @@ public class NavigationService
     public void GoToSearch()
     {
         var page = _pageFactory.GetSearchPage();
-        if (page.ResultsInWeb != null) page.ResultsInWeb.Clear();
+        NavigateTo(page);
+    }
+
+    public void GoToFavorites()
+    {
+        var page = _pageFactory.GetFavoritesPage();
         NavigateTo(page);
     }
 

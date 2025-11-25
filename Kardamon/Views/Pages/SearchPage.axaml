@@ -15,358 +15,113 @@
              Foreground="#FFF"
              Background="Black">
     <UserControl.Styles>
-        <Style Selector="Button">
-            <Setter Property="Background" Value="Transparent"></Setter>
+        <Style Selector="Button.MoreButton">
+            <Setter Property="Foreground" Value="White"></Setter>
             <Setter Property="Template">
                 <ControlTemplate>
-                    <Border CornerRadius="24"
-                            BorderThickness="0"
-                            Background="{TemplateBinding Background}">
-                        <ContentPresenter Foreground="#FFF" Content="{TemplateBinding Content}"></ContentPresenter>
-                    </Border>
+                    <ContentPresenter Content="{TemplateBinding Content}" />
                 </ControlTemplate>
             </Setter>
         </Style>
-        <Style Selector="Button:pointerover">
-            <Setter Property="Background" Value="#50FFFFFF"></Setter>
+
+        <Style Selector="Button.MoreButton avalonia|Icon">
+            <Setter Property="FontSize" Value="24"></Setter>
         </Style>
-        <Style Selector="Button:pressed">
-            <Setter Property="Background" Value="#20FFFFFF"></Setter>
+
+        <Style Selector="Button.MoreButton:pressed avalonia|Icon">
+            <Setter Property="Foreground" Value="#40FFFFFF"></Setter>
         </Style>
-        <Style Selector="Button:disabled">
+
+        <Style Selector="TextBlock.SectionHeader">
+            <Setter Property="FontSize" Value="19"></Setter>
+        </Style>
+
+        <Style Selector="StackPanel.ListHeadButtons Button">
             <Setter Property="Background" Value="Transparent"></Setter>
-            <Setter Property="Opacity" Value="0.5" />
+            <Setter Property="Foreground" Value="White"></Setter>
+            <Setter Property="FontSize" Value="28"></Setter>
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Height="40"
+                            Width="40"
+                            CornerRadius="20"
+                            Background="{TemplateBinding Background}">
+                        <ContentPresenter Content="{TemplateBinding Content}"></ContentPresenter>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+
+            <Style Selector="^:pointerover">
+                <Setter Property="Background" Value="White"></Setter>
+                <Setter Property="Foreground" Value="Black"></Setter>
+            </Style>
+
+            <Style Selector="^:pressed">
+                <Setter Property="Background" Value="Black"></Setter>
+                <Setter Property="Foreground" Value="White"></Setter>
+            </Style>
+
+            <Style Selector="^:disabled">
+                <Setter Property="Background" Value="Transparent"></Setter>
+                <Setter Property="Foreground" Value="Gray"></Setter>
+            </Style>
         </Style>
     </UserControl.Styles>
     <Grid>
-
-        <ScrollViewer VerticalScrollBarVisibility="Auto"
-                      IsVisible="{Binding ResultsInWeb, Converter={kardamon:ItemsIsNotEmptyConverter}}"
-                      HorizontalScrollBarVisibility="Disabled">
-            <ItemsControl Margin="16,160,16,30" ItemsSource="{Binding ResultsInWeb}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Orientation="Vertical"
-                                    Spacing="6" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Grid>
-                            <DockPanel LastChildFill="True"
-                                       Margin="0,0,0,6">
-                                <Grid>
-                                    <Button Classes="tileButton"
-                                            Command="{Binding $parent[ItemsControl].((viewModels:SearchPageViewModel)DataContext).PlayCommand}"
-                                            CommandParameter="{Binding .}">
-                                        <Classes.IsPlaying>
-                                            <MultiBinding Converter="{valueConverters:IsEqualToConverter}">
-                                                <Binding Path="." />
-                                                <Binding
-                                                    Path="((viewModels:MainViewModel)DataContext).MiniPlayer.Song"
-                                                    RelativeSource="{RelativeSource AncestorType=views:Main}">
-                                                </Binding>
-                                            </MultiBinding>
-                                        </Classes.IsPlaying>
-                                        <Button.Styles>
-                                            <Style Selector="Button.tileButton:pressed">
-                                                <Setter Property="RenderTransform">
-                                                    <Rotate3DTransform AngleY="20"
-                                                                       Depth="500">
-                                                    </Rotate3DTransform>
-                                                </Setter>
-                                            </Style>
-                                            <Style Selector="Button.tileButton:not(.IsPlaying)">
-                                                <Setter Property="Background" Value="Transparent" />
-                                            </Style>
-                                            <Style Selector="Button.tileButton.IsPlaying">
-                                                <Setter Property="Background" Value="Red" />
-                                            </Style>
-                                        </Button.Styles>
-                                        <Button.Template>
-                                            <ControlTemplate>
-                                                <Border Width="71"
-                                                        Height="71"
-                                                        CornerRadius="12"
-                                                        BorderThickness="1"
-                                                        BorderBrush="Gray"
-                                                        Background="Black">
-                                                    <Grid>
-                                                        <avalonia:Icon FontSize="48"
-                                                                       Value="mdi headphones"
-                                                                       Foreground="#50FFFFFF"
-                                                                       Margin="0,0,0,0" />
-                                                    </Grid>
-                                                </Border>
-                                            </ControlTemplate>
-                                        </Button.Template>
-                                    </Button>
-                                    <Button Classes="tileButton"
-                                            IsHitTestVisible="False"
-                                            VerticalAlignment="Bottom"
-                                            HorizontalAlignment="Right"
-                                            Margin="8"
-                                            Command="{Binding $parent[ItemsControl].((viewModels:SearchPageViewModel)DataContext).PlayCommand}"
-                                            CommandParameter="{Binding .}">
-                                        <Button.IsVisible>
-                                            <MultiBinding Converter="{valueConverters:IsEqualToConverter}">
-                                                <Binding Path="." />
-                                                <Binding
-                                                    Path="((viewModels:MainViewModel)DataContext).MiniPlayer.Song"
-                                                    RelativeSource="{RelativeSource AncestorType=views:Main}">
-                                                </Binding>
-                                            </MultiBinding>
-                                        </Button.IsVisible>
-                                        <Button.Styles>
-                                            <Style Selector="Button.tileButton:pressed">
-                                                <Setter Property="RenderTransform">
-                                                    <Rotate3DTransform AngleY="20"
-                                                                       Depth="500">
-                                                    </Rotate3DTransform>
-                                                </Setter>
-                                            </Style>
-                                        </Button.Styles>
-                                        <Button.Template>
-                                            <ControlTemplate>
-                                                <Border Width="24"
-                                                        Height="24"
-                                                        CornerRadius="12"
-
-                                                        Background="Red">
-                                                    <Grid>
-                                                        <avalonia:Icon FontSize="16"
-                                                                       Value="mdi play"
-                                                                       Foreground="#FFF"
-                                                                       Margin="0,0,0,0" />
-                                                    </Grid>
-                                                </Border>
-                                            </ControlTemplate>
-                                        </Button.Template>
-                                    </Button>
-                                </Grid>
-                                <ProgressBar DockPanel.Dock="Bottom"
-                                             Maximum="{Binding $parent[views:Main].((viewModels:MainViewModel)DataContext).MiniPlayer.TotalTime}"
-                                             Value="{Binding $parent[views:Main].((viewModels:MainViewModel)DataContext).MiniPlayer.CurrentTime}"
-                                             Height="4"
-                                             Margin="18,8"
-                                             CornerRadius="2"
-                                             MinHeight="4"
-
-                                             BorderThickness="0"
-                                             Foreground="DarkRed"
-                                             Background="Gray">
-                                    <ProgressBar.IsVisible>
-                                        <MultiBinding Converter="{valueConverters:IsEqualToConverter}">
-                                            <Binding Path="." />
-                                            <Binding
-                                                Path="((viewModels:MainViewModel)DataContext).MiniPlayer.Song"
-                                                RelativeSource="{RelativeSource AncestorType=views:Main}">
-                                            </Binding>
-                                        </MultiBinding>
-                                    </ProgressBar.IsVisible>
-                                </ProgressBar>
-                                <StackPanel Margin="16,0"
-                                            VerticalAlignment="Top">
-                                    <TextBlock Text="{Binding Name}"
-                                               VerticalAlignment="Bottom"
-                                               HorizontalAlignment="Left"
-                                               TextTrimming="CharacterEllipsis" />
-                                    <TextBlock Text="{Binding Artist}"
-                                               VerticalAlignment="Bottom"
-                                               FontSize="12"
-                                               Opacity="0.5"
-                                               HorizontalAlignment="Left"
-                                               TextTrimming="CharacterEllipsis" />
-                                    <TextBlock Text="{Binding Time}"
-                                               VerticalAlignment="Bottom"
-                                               FontSize="12"
-                                               Opacity="0.5"
-                                               HorizontalAlignment="Left"
-                                               TextTrimming="CharacterEllipsis" />
-
-                                </StackPanel>
-                            </DockPanel>
-                            <Button Classes="tileButton"
-                                    VerticalAlignment="Top"
-                                    HorizontalAlignment="Right"
-                                    Margin="8"
-                                    Classes.Favorite="{Binding IsFavorite}"
-                                    Command="{Binding $parent[ItemsControl].((viewModels:SearchPageViewModel)DataContext).MarkFavoriteCommand}"
-                                    CommandParameter="{Binding Id}">
-                                <Button.Styles>
-                                    <Style Selector="Button.tileButton">
-                                        <Setter Property="Background" Value="Transparent" />
-                                    </Style>
-                                    <Style Selector="Button.tileButton.IsFavorite">
-                                        <Setter Property="Background" Value="Green" />
-                                    </Style>
-                                </Button.Styles>
-                                <Button.Template>
-                                    <ControlTemplate>
-                                        <Border Width="24"
-                                                Height="24"
-                                                CornerRadius="12"
-
-                                                Background="{TemplateBinding Background}">
-                                            <Grid>
-                                                <avalonia:Icon FontSize="16"
-                                                               Value="mdi plus"
-                                                               Foreground="#FFF"
-                                                               Margin="0,0,0,0" />
-                                            </Grid>
-                                        </Border>
-                                    </ControlTemplate>
-                                </Button.Template>
-                            </Button>
-                        </Grid>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
-        <Border Grid.Row="0"
-                VerticalAlignment="Top">
-            <Border.Background>
-                <LinearGradientBrush StartPoint="0% 0%"
-                                     EndPoint="0% 100%">
-                    <GradientStop Offset="0.0" Color="Black" />
-                    <GradientStop Offset="1.0" Color="#00000000" />
-                </LinearGradientBrush>
-            </Border.Background>
-            <Grid>
+        <DockPanel LastChildFill="True"
+                   Classes="Section"
+                   
+                   ClipToBounds="True">
+            <Border Height="48"
+                    DockPanel.Dock="Top"
+                    Background="Transparent">
                 <DockPanel LastChildFill="True"
-                           Margin="16,0,0,0">
-                    <Button Width="48"
-                            Margin="0,0,0,0"
-                            Classes="tileButton"
-                            IsVisible="{Binding ResultsInWeb, Converter={kardamon:ItemsIsNotEmptyConverter}}"
-                            Command="{Binding PlayManyCommand}"
-                            CommandParameter="{Binding ResultsInWeb}"
-                            Height="48">
-                        <Button.Template>
-                            <ControlTemplate>
-                                <Border BorderThickness="1"
-                                        CornerRadius="24"
-                                        Padding="16,8">
-                                    <Border.BorderBrush>
-                                        <LinearGradientBrush StartPoint="0% 0%"
-                                                             Opacity="0.5"
-                                                             EndPoint="100% 100%">
-                                            <GradientStop Offset="0.0" Color="DimGray" />
-                                            <GradientStop Offset="0.5" Color="LightGray" />
-                                            <GradientStop Offset="1.0" Color="DimGray" />
-                                        </LinearGradientBrush>
-                                    </Border.BorderBrush>
-                                    <Border.Background>
-                                        <LinearGradientBrush StartPoint="0% 0%"
-                                                             Opacity="0.5"
-                                                             EndPoint="100% 100%">
-                                            <GradientStop Offset="0.0" Color="LightGray" />
-                                            <GradientStop Offset="0.5" Color="DimGray" />
-                                            <GradientStop Offset="1.0" Color="LightGray" />
-                                        </LinearGradientBrush>
-                                    </Border.Background>
-                                    <Grid>
-                                        <avalonia:Icon FontSize="24"
-                                                       Value="mdi play"
-                                                       Margin="0,0,0,0">
-                                            <avalonia:Icon.Foreground>
-                                                <LinearGradientBrush StartPoint="0% 0%"
-                                                                     Opacity="1"
-                                                                     EndPoint="100% 100%">
-                                                    <GradientStop Offset="0.0" Color="LightGray" />
-                                                    <GradientStop Offset="0.5" Color="DimGray" />
-                                                    <GradientStop Offset="1.0" Color="LightGray" />
-                                                </LinearGradientBrush>
-                                            </avalonia:Icon.Foreground>
-                                        </avalonia:Icon>
-                                    </Grid>
-                                </Border>
-                            </ControlTemplate>
-                        </Button.Template>
+                           VerticalAlignment="Center">
+                    <Button Classes="MoreButton"
+                            Command="{Binding DismissSearchCommand}"
+                            DockPanel.Dock="Left">
+                        <avalonia:Icon Value="mdi arrow-left"
+                                       Margin="10,0"/>
                     </Button>
-                    <Border Margin="16,0"
-                            VerticalAlignment="Top"
-                            Height="48"
-                            BorderThickness="1"
-                            CornerRadius="24">
-                        <Border.BorderBrush>
-                            <LinearGradientBrush StartPoint="0% 0%"
-                                                 EndPoint="100% 100%">
-                                <GradientStop Offset="0.0" Color="DimGray" />
-                                <GradientStop Offset="0.5" Color="LightGray" />
-                                <GradientStop Offset="1.0" Color="Gray" />
-                            </LinearGradientBrush>
-                        </Border.BorderBrush>
-                        <Border.Background>
-                            <LinearGradientBrush StartPoint="0% 0%"
-                                                 Opacity="0.2"
-                                                 EndPoint="100% 100%">
-                                <GradientStop Offset="0.0" Color="LightGray" />
-                                <GradientStop Offset="0.5" Color="DimGray" />
-                                <GradientStop Offset="1.0" Color="Gray" />
-                            </LinearGradientBrush>
-                        </Border.Background>
-                        <DockPanel
-                            Margin="0">
-                            <Button DockPanel.Dock="Right"
-
-                                    Width="28"
-                                    Height="28"
-                                    Margin="8,0"
-                                    CornerRadius="24"
-                                    Command="{Binding DismissSearchCommand}"
-                                    BorderThickness="0">
-                                <avalonia:Icon Value="mdi close"
-                                               FontSize="16"
-                                               Foreground="#FFF" />
-                            </Button>
-                            <Border Height="40"
-                                    Margin="0,0,6,0">
-                                <Grid ColumnDefinitions="Auto,*,Auto">
-
-
-                                    <!-- Заголовок -->
-                                    <TextBox Grid.Column="1"
-                                             CornerRadius="0"
-                                             Foreground="#FFF"
-                                             Text="{Binding SearchText}">
-                                        <TextBox.KeyBindings>
-                                            <KeyBinding Gesture="Return" Command="{Binding SearchCommand}" />
-                                        </TextBox.KeyBindings>
-                                        <TextBox.Template>
-                                            <ControlTemplate TargetType="TextBox">
-                                                <Border CornerRadius="{TemplateBinding CornerRadius}"
-                                                        Background="Transparent"
-                                                        Cursor="IBeam">
-                                                    <TextPresenter x:Name="PART_TextPresenter"
-                                                                   Margin="16,0"
-                                                                   VerticalAlignment="Center"
-                                                                   Text="{TemplateBinding Text}"
-                                                                   CaretBrush="White"
-                                                                   CaretIndex="{TemplateBinding CaretIndex}"
-                                                                   SelectionBrush="Purple"
-                                                                   SelectionForegroundBrush="White"
-                                                                   SelectionEnd="{TemplateBinding SelectionEnd}"
-                                                                   SelectionStart="{TemplateBinding SelectionStart}" />
-                                                </Border>
-                                            </ControlTemplate>
-                                        </TextBox.Template>
-                                    </TextBox>
-
-                                </Grid>
-                            </Border>
-                        </DockPanel>
-                    </Border>
+                    <TextBlock Classes="SectionHeader" VerticalAlignment="Center"
+                               Text="в результатах"
+                               Margin="16,0">
+                    </TextBlock>
                 </DockPanel>
-            </Grid>
+            </Border>
+            <Border Background="Transparent">
+                <DockPanel LastChildFill="True"
+                           >
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="20"
+                                Margin="0,10"
+                                Classes="ListHeadButtons"
+                                DockPanel.Dock="Top">
+                        <Button Classes="PlayButton"
+                                Command="{Binding PlayManyCommand}"
+                                CommandParameter="{Binding ResultsInWeb}">
+                            <avalonia:Icon Value="mdi play" />
+                        </Button>
+                        <Button Classes="ShuffleButton"
+                                Command="{Binding ShuffleCommand}">
+                            <avalonia:Icon Value="mdi shuffle" />
+                        </Button>
+                    </StackPanel>
+                    <ScrollViewer>
+                        <ItemsControl ItemsSource="{Binding ResultsInWeb}"
+                                      ItemTemplate="{DynamicResource TopListItemTemplate}">
+                        </ItemsControl>
+                    </ScrollViewer>
+                </DockPanel>
+            </Border>
+        </DockPanel>
+        
+        <Border Width="10"
+                HorizontalAlignment="Left"
+                Background="Transparent">
+            <Interaction.Behaviors>
+                <behaviors:BackSwipeGestureBehavior BackCommand="{Binding DismissSearchCommand}"></behaviors:BackSwipeGestureBehavior>
+            </Interaction.Behaviors>
         </Border>
-        <TextBlock FontSize="14"
-                   Foreground="#FFF"
-                   Text="В ТОП-РЕЗУЛЬТАТЕ"
-                   FontStretch="SemiCondensed"
-                   IsVisible="{Binding ResultsInWeb, Converter={kardamon:ItemsIsNotEmptyConverter}}"
-                   Margin="16,80,16,16"
-                   FontWeight="SemiBold">
-        </TextBlock>
     </Grid>
 </UserControl>

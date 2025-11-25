@@ -13,145 +13,99 @@
              x:DataType="viewModels:CommandBarViewModel"
              x:Class="Kardamon.Views.CommandBar">
     <UserControl.Styles>
-        <Style Selector="Button">
+        <Style Selector="DockPanel.TransportControlsStack Button">
             <Setter Property="Background" Value="Transparent"></Setter>
+            <Setter Property="Foreground" Value="White"></Setter>
+            <Setter Property="FontSize" Value="28"></Setter>
             <Setter Property="Template">
                 <ControlTemplate>
-                    <StackPanel Spacing="9">
-                        <Border CornerRadius="24"
-                                Height="48"
-                                Width="48"
-                                Background="{TemplateBinding Background}">
-                            <ContentPresenter Content="{TemplateBinding Content}">
-                            </ContentPresenter>
-                        </Border>
-                    </StackPanel>
+                    <Border Height="40"
+                            Width="40"
+                            CornerRadius="20"
+                            Background="{TemplateBinding Background}">
+                        <ContentPresenter Content="{TemplateBinding Content}"></ContentPresenter>
+                    </Border>
                 </ControlTemplate>
             </Setter>
+
+            <Style Selector="^:pointerover">
+                <Setter Property="Background" Value="White"></Setter>
+                <Setter Property="Foreground" Value="Black"></Setter>
+            </Style>
+
+            <Style Selector="^:pressed">
+                <Setter Property="Background" Value="Black"></Setter>
+                <Setter Property="Foreground" Value="White"></Setter>
+            </Style>
+
+            <Style Selector="^:disabled">
+                <Setter Property="Background" Value="Transparent"></Setter>
+                <Setter Property="Foreground" Value="Gray"></Setter>
+            </Style>
         </Style>
-        <Style Selector="Button:pointerover">
-            <Setter Property="Background" Value="#50FFFFFF"></Setter>
+
+        <Style Selector="DockPanel.TransportControlsStack Button.LeftButton">
+            <Setter Property="Command"
+                    Value="{Binding $parent[views:Main].((viewModels:MainViewModel)DataContext).MiniPlayer.RewindCommand}" />
         </Style>
-        <Style Selector="Button:pressed">
-            <Setter Property="Background" Value="#20FFFFFF"></Setter>
+
+        <Style Selector="DockPanel.TransportControlsStack Button.LeftButton avalonia|Icon">
+            <Setter Property="Value" Value="mdi chevron-left" />
         </Style>
-        <Style Selector="Button:disabled">
-            <Setter Property="Background" Value="Transparent"></Setter>
-            <Setter Property="Opacity" Value="0.5" />
+
+        <Style Selector="DockPanel.TransportControlsStack Button.CenterButton avalonia|Icon">
+            <Setter Property="Value" Value="mdi pause" />
+        </Style>
+
+        <Style Selector="DockPanel.TransportControlsStack Button.CenterButton:not(.IsPlaying) avalonia|Icon">
+            <Setter Property="Value" Value="mdi play" />
+        </Style>
+
+        <Style Selector="DockPanel.TransportControlsStack Button.CenterButton">
+            <Setter Property="Command"
+                    Value="{Binding $parent[views:Main].((viewModels:MainViewModel)DataContext).MiniPlayer.TogglePlayCommand}" />
+            <Setter Property="Background" Value="White" />
+            <Setter Property="Foreground" Value="Black" />
+        </Style>
+
+        <Style Selector="DockPanel.TransportControlsStack Button.RightButton">
+            <Setter Property="Command"
+                    Value="{Binding $parent[views:Main].((viewModels:MainViewModel)DataContext).MiniPlayer.ForwardCommand}" />
+        </Style>
+
+        <Style Selector="DockPanel.TransportControlsStack Button.RightButton avalonia|Icon">
+            <Setter Property="Value" Value="mdi chevron-right" />
         </Style>
     </UserControl.Styles>
+    <UserControl.IsVisible>
+        <MultiBinding Converter="{valueConverters:EnumValueIsNotEqualToConverter}">
+            <Binding Path="((viewModels:MainViewModel)DataContext).CurrentPage.Type" RelativeSource="{RelativeSource AncestorType=views:Main}"/>
+            <Binding Source="NowPlaying"></Binding>
+        </MultiBinding>
+    </UserControl.IsVisible>
     <Border
         Background="Black">
-        <Grid>
-            <Border CornerRadius="24"
-                    Height="48"
-                    Margin="16,0"
-                    BorderThickness="1"
-                    VerticalAlignment="Bottom">
-                <Border.BorderBrush>
-                    <LinearGradientBrush StartPoint="0% 0%"
-                                         EndPoint="100% 100%">
-                        <GradientStop Offset="0.0" Color="DimGray" />
-                        <GradientStop Offset="0.5" Color="LightGray" />
-                        <GradientStop Offset="1.0" Color="Gray" />
-                    </LinearGradientBrush>
-                </Border.BorderBrush>
-                <Border.Background>
-                    <LinearGradientBrush StartPoint="0% 0%"
-                                         Opacity="0.2"
-                                         EndPoint="100% 100%">
-                        <GradientStop Offset="0.0" Color="LightGray" />
-                        <GradientStop Offset="0.5" Color="DimGray" />
-                        <GradientStop Offset="1.0" Color="Gray" />
-                    </LinearGradientBrush>
-                </Border.Background>
-                <DockPanel LastChildFill="True"
-                           Margin="0,0">
-                    <Button Command="{Binding ToggleIsOpenCommand}"
-                            Height="48"
-                            Width="48"
-                            Background="Transparent">
-                        <avalonia:Icon Value="mdi view-grid"
-                                       FontSize="24"
-                                       Foreground="#90FFFFFF">
-                        </avalonia:Icon>
+        <Grid Height="52">
+            
+            <DockPanel LastChildFill="True"
+                       Margin="16,0"
+                        Classes="TransportControlsStack">
+                <Button Classes="LeftButton">
+                    <avalonia:Icon />
+                </Button>
+                
+                <Button Classes="RightButton"
+                        DockPanel.Dock="Right">
+                    <avalonia:Icon />
+                </Button>
+                <Grid>
+                    <Button Classes="CenterButton"
+                            HorizontalAlignment="Center"
+                            Classes.IsPlaying="{Binding $parent[views:Main].((viewModels:MainViewModel)DataContext).MiniPlayer.IsPlaying}">
+                        <avalonia:Icon />
                     </Button>
-                    <Button Height="48"
-                            Width="48"
-                            IsEnabled="{Binding $parent[views:Main].((viewModels:MainViewModel)DataContext).MiniPlayer.Song, Converter={x:Static ObjectConverters.IsNotNull}}"
-                            Classes.Playing="{Binding $parent[views:Main].((viewModels:MainViewModel)DataContext).MiniPlayer.IsPlaying}"
-                            Command="{Binding $parent[views:Main].((viewModels:MainViewModel)DataContext).MiniPlayer.TogglePlayCommand}"
-                            DockPanel.Dock="Right">
-                        <Button.IsVisible>
-                            <MultiBinding Converter="{valueConverters:EnumValueIsNotEqualToConverter}">
-                                <Binding Path="((viewModels:MainViewModel)DataContext).CurrentPage.Type" RelativeSource="{RelativeSource AncestorType=views:Main}"/>
-                                <Binding Source="NowPlaying"></Binding>
-                            </MultiBinding>
-                        </Button.IsVisible>
-                        <Button.Styles>
-                            <Style Selector="Button avalonia|Icon">
-                                <Setter Property="Value" Value="mdi play" />
-                            </Style>
-                            <Style Selector="Button.Playing avalonia|Icon">
-                                <Setter Property="Value" Value="mdi pause" />
-                            </Style>
-                        </Button.Styles>
-                        <avalonia:Icon
-                            FontSize="30" 
-                            Foreground="#90FFFFFF">
-                        </avalonia:Icon>
-                    </Button>
-                    <Grid>
-                        <Grid>
-                            <Grid.IsVisible>
-                                <MultiBinding Converter="{valueConverters:EnumValueIsNotEqualToConverter}">
-                                    <Binding Path="((viewModels:MainViewModel)DataContext).CurrentPage.Type" RelativeSource="{RelativeSource AncestorType=views:Main}"/>
-                                    <Binding Source="NowPlaying"></Binding>
-                                </MultiBinding>
-                            </Grid.IsVisible>
-                            <TextBlock VerticalAlignment="Center"
-                                   HorizontalAlignment="Center"
-                                   Margin="16.0"
-                                   Foreground="#60FFFFFF"
-                                   Text="Не воспроизводится"
-                                   IsVisible="{Binding $parent[views:Main].((viewModels:MainViewModel)DataContext).MiniPlayer.Song, Converter={x:Static ObjectConverters.IsNull}}"
-                                   FontSize="14"
-                                   FontWeight="SemiBold"/>
-                        <Border Width="40"
-                                Height="40"
-                                BorderThickness="1"
-                                CornerRadius="8"
-                                IsVisible="{Binding $parent[views:Main].((viewModels:MainViewModel)DataContext).MiniPlayer.Song, Converter={x:Static ObjectConverters.IsNotNull}}">
-                            <Border.Background>
-                                <LinearGradientBrush StartPoint="0% 0%"
-                                                     Opacity="0.2"
-                                                     EndPoint="100% 100%">
-                                    <GradientStop Offset="0.0" Color="LightGray" />
-                                    <GradientStop Offset="0.5" Color="DimGray" />
-                                    <GradientStop Offset="1.0" Color="LightGray" />
-                                </LinearGradientBrush>
-                            </Border.Background>
-                            <Grid>
-                                <avalonia:Icon FontSize="32"
-                                               Foreground="#40FFFFFF"
-                                               Value="mdi headphones"
-                                               Margin="0,0,0,0" />
-                                <Border CornerRadius="8"
-                                        Margin="2">
-                                    <Border.Background>
-                                        <ImageBrush
-                                            Source="{Binding $parent[views:Main].((viewModels:MainViewModel)DataContext).MiniPlayer.Song.ImagePath, Converter={kardamon:DecodedImageSourceConverter}, ConverterParameter=48}">
-                                        </ImageBrush>
-                                    </Border.Background>
-                                </Border>
-
-                            </Grid>
-                        </Border>
-                        </Grid>
-                        
-                    </Grid>
-                </DockPanel>
-            </Border>
+                </Grid>
+            </DockPanel>
         </Grid>
     </Border>
 </UserControl>

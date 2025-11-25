@@ -10,4 +10,20 @@ public partial class NowPlayingPage : UserControl
     {
         InitializeComponent();
     }
+    
+    protected override void OnSizeChanged(SizeChangedEventArgs e)
+    {
+        base.OnSizeChanged(e);
+        
+        if (e.NewSize.Width < 540)
+        {
+            DesktopLayout.IsVisible = false;
+            MobileLayout.IsVisible = true;
+        }
+        else
+        {
+            DesktopLayout.IsVisible = true;
+            MobileLayout.IsVisible = false;
+        }
+    }
 }

@@ -1,12 +1,9 @@
-using System.Timers;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Input.GestureRecognizers;
-using Avalonia.Media;
-using Avalonia.Threading;
 using Avalonia.Xaml.Interactivity;
 using Kardamon.ViewModels;
 
@@ -96,33 +93,6 @@ public class SliderDragBehavior : Behavior<Slider>
         catch (Exception exception)
         {
             Console.WriteLine(exception);
-        }
-    }
-}
-
-public class VisualBrushRedrawBehavior : Behavior<Control>
-{
-    private Timer _timer;
-
-    protected override void OnAttached()
-    {
-        base.OnAttached();
-        _timer = new Timer(100);
-        _timer.Elapsed += TimerOnElapsed;
-        _timer.Start();
-    }
-
-    private void TimerOnElapsed(object? sender, ElapsedEventArgs e)
-    {
-        var border = AssociatedObject as Border;
-        if (border != null)
-        {
-            Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                var visualBr = border.Background as VisualBrush;
-                var visual = visualBr.Visual;
-                border.Background = new VisualBrush(visual) {Stretch = Stretch.Fill};
-            });
         }
     }
 }

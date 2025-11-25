@@ -59,4 +59,5 @@ public partial class CommandBarViewModel : ViewModelBase
         var search = _pageFactory.GetSearchPage();
         _navigationService.NavigateTo(search);
     }
+    
 }

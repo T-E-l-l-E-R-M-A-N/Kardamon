@@ -13,7 +13,7 @@ public sealed class PanoramaPageWidthConverter : MarkupExtension, IValueConverte
 
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        return System.Convert.ToDouble(value) - 40;
+        return System.Convert.ToDouble(value) - 80;
     }
 
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

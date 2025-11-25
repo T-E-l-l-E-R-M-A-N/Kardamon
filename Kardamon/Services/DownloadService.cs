@@ -21,18 +21,14 @@ public class DownloadService
         _navigationService = navigationService;
     }
     
-    public async Task<string> DownloadForPreviewAsync(SongModel song)
+    public string DownloadForPreviewAsync(SongModel song)
     {
         using var wc = new WebClient();
         var newFileName = _downloads + $"{song.Id}.mp3";
         if (!File.Exists(newFileName))
         {
-            await Task.Run(() =>
-            {
-                _notificationService.Send("Music", "Buffering...", 3);
-                wc.DownloadFile(song.FilePath, newFileName);
-                song.FilePath = newFileName;
-            });
+            wc.DownloadFile(song.FilePath, newFileName);
+            song.FilePath = newFileName;
         }
         
         return newFileName;
@@ -51,18 +47,12 @@ public class DownloadService
                 _notificationService.Send("Music", "Add to my music", 3);
                 song.IsDownloaded = true;
                 _libraryService.AddToLibrary(song);
-                var lib = _pageFactory.GetMyMusicPage();
-                await lib.ScanFilesCommand.ExecuteAsync(null!);
-                _navigationService.NavigateTo(lib);
             });
         }
         else
         {
             song.IsDownloaded = true;
             _libraryService.AddToLibrary(song);
-            var lib = _pageFactory.GetMyMusicPage();
-            await lib.ScanFilesCommand.ExecuteAsync(null!);
-            _navigationService.NavigateTo(lib);
         }
     }
 }

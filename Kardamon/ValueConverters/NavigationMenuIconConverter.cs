@@ -19,6 +19,7 @@ public sealed class NavigationMenuIconConverter : BaseValueConverter
             PageType.Search => "mdi magnify",
             PageType.About => "mdi information-outline",
             PageType.Web => "mdi web",
+            PageType.Favorites => "mdi heart",
             PageType.NowPlaying => "mdi equalizer-outline",
             _ => "mdi view-grid-outline"
         };

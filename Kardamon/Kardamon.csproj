@@ -26,6 +26,7 @@
         <PackageReference Include="LibVLCSharp" />
         <PackageReference Include="LiteDB" />
         <PackageReference Include="MediaPlayer.Avalonia.Bass" />
+        <PackageReference Include="Microsoft.Extensions.Caching.Memory" />
         <PackageReference Include="Microsoft.Maui.Core" />
         <PackageReference Include="Newtonsoft.Json" />
         <PackageReference Include="Plugin.MediaManager" />
@@ -36,6 +37,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controls\" />
+      <Folder Include="AttachedProperties\" />
     </ItemGroup>
 </Project>

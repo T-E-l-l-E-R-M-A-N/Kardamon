@@ -9,714 +9,457 @@
              xmlns:behaviors="clr-namespace:Kardamon.Behaviors"
              xmlns:valueConverters="clr-namespace:Kardamon.ValueConverters"
              xmlns:views="clr-namespace:Kardamon.Views"
-             mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="450"
+             xmlns:controls="clr-namespace:Kardamon.Controls"
+             xmlns:helpers="clr-namespace:Kardamon.Helpers"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="700"
              x:Class="Kardamon.Views.ExplorePage"
              Foreground="#FFF"
              Background="Black"
+             FontWeight="Thin"
              x:DataType="viewModels:ExplorePageViewModel">
-
-    <!-- Локальные стили под Material You -->
-
     <UserControl.Styles>
-        <!-- Круглая FAB-кнопка Play -->
-        <Style Selector="Button.tileButton">
-            <Setter Property="CornerRadius" Value="10"></Setter>
-            <Setter Property="Transitions">
-                <Transitions>
-                    <DoubleTransition Property="Opacity" Duration="0:0:0.5"></DoubleTransition>
-                </Transitions>
-            </Setter>
-        </Style>
-        <Style Selector="Button.tileButton:pressed">
-            <Setter Property="Opacity" Value="0.7" />
-        </Style>
-
-        <Style Selector="Button.forYouFab">
-            <Setter Property="Width" Value="200" />
-            <Setter Property="Height" Value="48" />
-            <Setter Property="CornerRadius" Value="12" />
-            <Setter Property="Background" Value="#BB86FC" />
-            <Setter Property="Padding" Value="16,0" />
-            <Setter Property="HorizontalContentAlignment" Value="Center" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Style Selector="Button.MoreButton">
+            <Setter Property="Foreground" Value="Transparent"></Setter>
             <Setter Property="Template">
                 <ControlTemplate>
-                    <Border Background="{TemplateBinding Background}"
-                            CornerRadius="{TemplateBinding CornerRadius}">
-                        <ContentPresenter HorizontalAlignment="Center"
-                                          VerticalAlignment="Center"
-                                          Content="{TemplateBinding Content}" />
-                    </Border>
+                    <ContentPresenter Content="{TemplateBinding Content}" />
                 </ControlTemplate>
             </Setter>
         </Style>
 
-        <!-- Карточка трека -->
-        <Style Selector="Button.songCard">
-            <Setter Property="Padding" Value="0" />
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="BorderThickness" Value="0" />
+        <Style Selector="Button.MoreButton avalonia|Icon">
+            <Setter Property="FontSize" Value="24"></Setter>
+        </Style>
+
+        <Style Selector="Button.MoreButton:pressed avalonia|Icon">
+            <Setter Property="Foreground" Value="#40FFFFFF"></Setter>
+        </Style>
+
+        <Style Selector="TextBlock.SectionHeader">
+            <Setter Property="FontSize" Value="19"></Setter>
+        </Style>
+
+        <Style Selector="StackPanel.ListHeadButtons Button">
+            <Setter Property="Background" Value="Transparent"></Setter>
+            <Setter Property="Foreground" Value="White"></Setter>
+            <Setter Property="FontSize" Value="28"></Setter>
             <Setter Property="Template">
                 <ControlTemplate>
-                    <Border CornerRadius="24"
-                            Background="Transparent"
-                            Margin="4">
-                        <ContentPresenter Content="{TemplateBinding Content}"
-                                          ContentTemplate="{TemplateBinding ContentTemplate}" />
+                    <Border Height="40"
+                            Width="40"
+                            CornerRadius="20"
+                            Background="{TemplateBinding Background}">
+                        <ContentPresenter Content="{TemplateBinding Content}"></ContentPresenter>
                     </Border>
                 </ControlTemplate>
             </Setter>
+
+            <Style Selector="^:pointerover">
+                <Setter Property="Background" Value="White"></Setter>
+                <Setter Property="Foreground" Value="Black"></Setter>
+            </Style>
+
+            <Style Selector="^:pressed">
+                <Setter Property="Background" Value="Black"></Setter>
+                <Setter Property="Foreground" Value="White"></Setter>
+            </Style>
+
+            <Style Selector="^:disabled">
+                <Setter Property="Background" Value="Transparent"></Setter>
+                <Setter Property="Foreground" Value="Gray"></Setter>
+            </Style>
         </Style>
+
     </UserControl.Styles>
 
     <Grid>
+        <ScrollViewer x:Name="DesktopLayout"
+                      IsVisible="True">
 
-        <Grid>
-
-            <!-- Верхняя панель: большой заголовок + поиск -->
-
-
-            <!-- Контент: маленькие плитки треков -->
-
-            <!--<ScrollViewer
-                VerticalScrollBarVisibility="Visible"
-                HorizontalScrollBarVisibility="Disabled">
-                <ItemsControl ItemsSource="{Binding Tops}"
-                              Margin="16,70,16,80"
-                              x:Name="TopList">
-
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel ItemSpacing="16"
-                                       LineSpacing="16" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Button Classes="songCard"
-                                    Command="{Binding $parent[ItemsControl].((viewModels:ExplorePageViewModel)DataContext).PlayCommand}"
-                                    CommandParameter="{Binding .}">
-                                <Grid Width="150">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-
-                                    ~1~ Обложка @1@
-
-                                    <Grid Height="150"
-                                          Width="150"
-                                          ClipToBounds="True">
-                                        <Border CornerRadius="20"
-                                                Background="Gray">
-                                            <Grid>
-                                                <avalonia:Icon FontSize="64"
-                                                               Foreground="DimGray"
-                                                               Value="mdi headphones" />
-                                                <asyncImageLoader:AdvancedImage
-                                                    Source="{Binding ImagePath}"
-                                                    Stretch="UniformToFill" />
-                                            </Grid>
-                                        </Border>
-
-                                        ~1~ Индикатор "играет сейчас" поверх обложки @1@
-
-                                        <Button Width="140"
-                                                Height="140"
-                                                IsHitTestVisible="False">
-                                            <Button.IsVisible>
-                                                <MultiBinding Converter="{valueConverters:IsEqualToConverter}">
-                                                    <Binding Path="." />
-                                                    <Binding
-                                                        Path="((viewModels:MainViewModel)DataContext).MiniPlayer.Song"
-                                                        RelativeSource="{RelativeSource AncestorType=views:Main}" />
-                                                </MultiBinding>
-                                            </Button.IsVisible>
-                                            <Button.Template>
-                                                <ControlTemplate>
-                                                    <Border Background="#66000000">
-                                                        <avalonia:Icon FontSize="40"
-                                                                       Value="mdi equalizer"
-                                                                       Foreground="#FFFFFFFF" />
-                                                    </Border>
-                                                </ControlTemplate>
-                                            </Button.Template>
-                                        </Button>
-                                    </Grid>
-
-                                    ~1~ Подписи под плиткой @1@
-
-                                    <StackPanel Grid.Row="1"
-                                                Margin="0,8,0,4"
-                                                Spacing="2">
-                                        <TextBlock Text="{Binding Name}"
-                                                   FontSize="13"
-                                                   FontWeight="Bold"
-                                                   TextTrimming="CharacterEllipsis" />
-                                        <TextBlock Text="{Binding Artist}"
-                                                   FontSize="12"
-                                                   Opacity="0.85"
-                                                   TextTrimming="CharacterEllipsis" />
-                                        <TextBlock Text="{Binding Time}"
-                                                   FontSize="11"
-                                                   Opacity="0.6" />
-                                    </StackPanel>
-                                </Grid>
-                            </Button>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </ScrollViewer>
-
-            <Border Grid.Row="0"
-                    VerticalAlignment="Top">
-                <Border.Background>
-                    <LinearGradientBrush StartPoint="0% 0%"
-                                         EndPoint="0% 100%">
-                        <GradientStop Offset="0.0" Color="Black" />
-                        <GradientStop Offset="1.0" Color="#00000000" />
-                    </LinearGradientBrush>
-                </Border.Background>
-                <Border Margin="16"
-                        CornerRadius="16"
-                        Background="Transparent"
-                        VerticalAlignment="Top">
-                    <Grid ColumnDefinitions="Auto,*,Auto"
-                          Margin="16">
-
-
-                        ~1~ Заголовок @1@
-                        <StackPanel Grid.Column="1"
-                                    Margin="0,0,0,0"
-                                    VerticalAlignment="Center"
-                                    Spacing="2">
-                            <TextBlock Text="Главная"
-                                       FontSize="28"
-                                       FontWeight="SemiBold"
-                                       TextTrimming="CharacterEllipsis" />
-                        </StackPanel>
-
-                        ~1~ Кнопка поиска справа (команду можно привязать позже) @1@
-                        <Button Grid.Column="2"
-                                Width="48"
-                                Height="48"
-                                CornerRadius="12"
-                                Background="#1FFFFFFF"
-                                BorderThickness="0">
-                            <avalonia:Icon Value="mdi magnify"
-                                           FontSize="22"
-                                           Foreground="#FFFFFFFF" />
-                        </Button>
-
-                    </Grid>
-                </Border>
-            </Border>
-            <Button Classes="forYouFab"
-                    VerticalAlignment="Bottom"
-                    HorizontalAlignment="Center"
-                    Margin="16"
-                    Command="{Binding PlayManyCommand}"
-                    CommandParameter="{Binding Tops}">
+            <WrapPanel LineSpacing="40"
+                       ItemSpacing="40"
+                       Orientation="Horizontal"
+                       ItemsAlignment="Center"
+                       HorizontalAlignment="Center"
+                       Margin="16,0">
                 <DockPanel LastChildFill="True"
-                           VerticalAlignment="Center">
-                    <avalonia:Icon Value="mdi play"
-                                   FontSize="22"
-                                   Foreground="#FFFFFF" />
-                    <Grid>
-                        <TextBlock Text="Воспроизвести"
-                                   Foreground="#FFF"
-                                   TextAlignment="Center"
-                                   VerticalAlignment="Center"
-                                   Margin="16,0" />
-                    </Grid>
-                </DockPanel>
-            </Button>-->
-
-            <DockPanel LastChildFill="True">
-                <Border DockPanel.Dock="Top">
-                    <Grid Margin="16,0,16,16">
-                        <TextBlock Text="главная"
-                                   FontSize="64"
-                                   Padding="0"
-                                   VerticalAlignment="Center"
-                                   FontWeight="Thin"
-                                   DockPanel.Dock="Top"
-                                   Margin="0,-18,0,0">
-                        </TextBlock>
-                        <Border HorizontalAlignment="Right"
-                                VerticalAlignment="Stretch"
-                                Margin="0,0,0,0"
-                                Padding="0,4,0,0">
-                            <Border.Background>
-                                <LinearGradientBrush StartPoint="0% 0%"
-                                                     EndPoint="100% 0%">
-                                    <GradientStop Offset="0.0" Color="#00000000" />
-                                    <GradientStop Offset="0.2" Color="Black" />
-                                    <GradientStop Offset="1.0" Color="Black" />
-                                </LinearGradientBrush>
-                            </Border.Background>
-                            <Border.RenderTransform>
-                                <TranslateTransform
-                                    X="{Binding #ScrollViewer.Offset.X, Converter={kardamon:PanoramaTitleTranslateConverter}}">
-                                </TranslateTransform>
-                            </Border.RenderTransform>
-                            <WrapPanel ItemSpacing="6"
-
-                                       LineSpacing="6"
-                                       Orientation="Horizontal">
-
-                                <Button Width="48"
-                                        Margin="30,0,0,0"
-                                        Classes="tileButton"
-                                        Command="{Binding PlayManyCommand}"
-                                        CommandParameter="{Binding Tops}"
-                                        Height="48">
-                                    <Button.Template>
-                                        <ControlTemplate>
-                                            <Border BorderThickness="1"
-                                                    CornerRadius="24"
-                                                    Padding="16,8">
-                                                <Border.BorderBrush>
-                                                    <LinearGradientBrush StartPoint="0% 0%"
-                                                                         Opacity="0.5"
-                                                                         EndPoint="100% 100%">
-                                                        <GradientStop Offset="0.0" Color="DimGray" />
-                                                        <GradientStop Offset="0.5" Color="LightGray" />
-                                                        <GradientStop Offset="1.0" Color="DimGray" />
-                                                    </LinearGradientBrush>
-                                                </Border.BorderBrush>
-                                                <Border.Background>
-                                                    <LinearGradientBrush StartPoint="0% 0%"
-                                                                         Opacity="0.5"
-                                                                         EndPoint="100% 100%">
-                                                        <GradientStop Offset="0.0" Color="LightGray" />
-                                                        <GradientStop Offset="0.5" Color="DimGray" />
-                                                        <GradientStop Offset="1.0" Color="LightGray" />
-                                                    </LinearGradientBrush>
-                                                </Border.Background>
-                                                <Grid>
-                                                    <avalonia:Icon FontSize="24"
-                                                                   Value="mdi play"
-                                                                   Margin="0,0,0,0">
-                                                        <avalonia:Icon.Foreground>
-                                                            <LinearGradientBrush StartPoint="0% 0%"
-                                                                    Opacity="1"
-                                                                    EndPoint="100% 100%">
-                                                                <GradientStop Offset="0.0" Color="LightGray" />
-                                                                <GradientStop Offset="0.5" Color="DimGray" />
-                                                                <GradientStop Offset="1.0" Color="LightGray" />
-                                                            </LinearGradientBrush>
-                                                        </avalonia:Icon.Foreground>
-                                                    </avalonia:Icon>
-                                                </Grid>
-                                            </Border>
-                                        </ControlTemplate>
-                                    </Button.Template>
-                                </Button>
-                                <!--<Button Width="48"
-                                        Classes="tileButton"
-
-                                        Height="48">
-                                    <Button.Template>
-                                        <ControlTemplate>
-                                            <Border BorderThickness="1"
-                                                    CornerRadius="24"
-                                                    Padding="16,8">
-                                                <Border.BorderBrush>
-                                                    <LinearGradientBrush StartPoint="0% 0%"
-                                                                         Opacity="0.5"
-                                                                         EndPoint="100% 100%">
-                                                        <GradientStop Offset="0.0" Color="DimGray" />
-                                                        <GradientStop Offset="0.5" Color="LightGray" />
-                                                        <GradientStop Offset="1.0" Color="DimGray" />
-                                                    </LinearGradientBrush>
-                                                </Border.BorderBrush>
-                                                <Border.Background>
-                                                    <LinearGradientBrush StartPoint="0% 0%"
-                                                                         Opacity="0.2"
-                                                                         EndPoint="100% 100%">
-                                                        <GradientStop Offset="0.0" Color="LightGray" />
-                                                        <GradientStop Offset="0.5" Color="DimGray" />
-                                                        <GradientStop Offset="1.0" Color="Gray" />
-                                                    </LinearGradientBrush>
-                                                </Border.Background>
-                                                <Grid>
-                                                    <avalonia:Icon FontSize="24"
-                                                                   Value="mdi shuffle"
-                                                                   Margin="0,0,0,0">
-                                                        <avalonia:Icon.Foreground>
-                                                            <LinearGradientBrush StartPoint="0% 0%"
-                                                                    Opacity="0.8"
-                                                                    EndPoint="100% 100%">
-                                                                <GradientStop Offset="0.0" Color="LightGray" />
-                                                                <GradientStop Offset="0.5" Color="DimGray" />
-                                                                <GradientStop Offset="1.0" Color="DimGray" />
-                                                            </LinearGradientBrush>
-                                                        </avalonia:Icon.Foreground>
-                                                    </avalonia:Icon>
-                                                </Grid>
-                                            </Border>
-                                        </ControlTemplate>
-                                    </Button.Template>
-                                </Button>-->
-                                <Button Width="48"
-                                        Classes="tileButton"
-                                        Command="{Binding OpenSearchCommand}"
-                                        Height="48">
-                                    <Button.Template>
-                                        <ControlTemplate>
-                                            <Border BorderThickness="1"
-                                                    CornerRadius="24"
-                                                    Padding="16,8">
-                                                <Border.BorderBrush>
-                                                    <LinearGradientBrush StartPoint="0% 0%"
-                                                                         Opacity="0.5"
-                                                                         EndPoint="100% 100%">
-                                                        <GradientStop Offset="0.0" Color="DimGray" />
-                                                        <GradientStop Offset="0.5" Color="LightGray" />
-                                                        <GradientStop Offset="1.0" Color="DimGray" />
-                                                    </LinearGradientBrush>
-                                                </Border.BorderBrush>
-                                                <Border.Background>
-                                                    <LinearGradientBrush StartPoint="0% 0%"
-                                                                         Opacity="0.2"
-                                                                         EndPoint="100% 100%">
-                                                        <GradientStop Offset="0.0" Color="DimGray" />
-                                                        <GradientStop Offset="0.5" Color="DimGray" />
-                                                        <GradientStop Offset="1.0" Color="LightGray" />
-                                                    </LinearGradientBrush>
-                                                </Border.Background>
-                                                <Grid>
-                                                    <avalonia:Icon FontSize="24"
-                                                                   Value="mdi magnify"
-                                                                   Margin="0,0,0,0">
-                                                        <avalonia:Icon.Foreground>
-                                                            <LinearGradientBrush StartPoint="0% 0%"
-                                                                    Opacity="0.8"
-                                                                    EndPoint="100% 100%">
-                                                                <GradientStop Offset="0.0" Color="LightGray" />
-                                                                <GradientStop Offset="0.5" Color="DimGray" />
-                                                                <GradientStop Offset="1.0" Color="Gray" />
-                                                            </LinearGradientBrush>
-                                                        </avalonia:Icon.Foreground>
-                                                    </avalonia:Icon>
-                                                </Grid>
-                                            </Border>
-                                        </ControlTemplate>
-                                    </Button.Template>
-                                </Button>
-                            </WrapPanel>
-                        </Border>
-                    </Grid>
-                </Border>
-
-                <ScrollViewer VerticalScrollBarVisibility="Disabled"
-                              x:Name="ScrollViewer"
-                              HorizontalScrollBarVisibility="Hidden">
-                    <StackPanel Orientation="Horizontal"
-                                Margin="16,0,0,0"
-                                Spacing="40">
+                           Height="220"
+                           Width="400"
+                           VerticalAlignment="Top"
+                           IsVisible="{Binding $parent[views:Main].((viewModels:MainViewModel)DataContext).MiniPlayer.Song, Converter={x:Static ObjectConverters.IsNotNull}}"
+                           Classes="NowPlayingSection">
+                    <Border Height="48"
+                            DockPanel.Dock="Top"
+                            Background="Transparent">
                         <DockPanel LastChildFill="True"
-                                   IsVisible="{Binding Favorites, Converter={kardamon:ItemsIsNotEmptyConverter}}">
-                            <TextBlock DockPanel.Dock="Top"
-                                       FontSize="14"
-                                       Margin="0,6"
-                                       FontWeight="SemiBold"
-                                       Text="МОИ ТРЕКИ" />
-                            <ItemsControl ItemsSource="{Binding Favorites}"
-                                          Margin="0,10,0,0">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <WrapPanel ItemSpacing="6"
-                                                   LineSpacing="6"
-                                                   Orientation="Vertical" />
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Border Width="150"
-                                                Height="150"
-                                                CornerRadius="12"
-                                                Padding="16,8">
-                                            <Border.Background>
-                                                <LinearGradientBrush StartPoint="0% 0%"
-                                                                     Opacity="0.2"
-                                                                     EndPoint="100% 100%">
-                                                    <GradientStop Offset="0.0" Color="LightGray" />
-                                                    <GradientStop Offset="0.5" Color="DimGray" />
-                                                    <GradientStop Offset="1.0" Color="Black" />
-                                                </LinearGradientBrush>
-                                            </Border.Background>
-                                            <Grid>
-                                                <avalonia:Icon FontSize="110"
-                                                               Value="mdi headphones"
-                                                               Margin="0,0,0,0">
-                                                    <avalonia:Icon.Foreground>
-                                                        <LinearGradientBrush StartPoint="0% 0%"
-                                                                             Opacity="0.8"
-                                                                             EndPoint="100% 100%">
-                                                            <GradientStop Offset="0.0" Color="LightGray" />
-                                                            <GradientStop Offset="0.5" Color="DimGray" />
-                                                            <GradientStop Offset="1.0" Color="Gray" />
-                                                        </LinearGradientBrush>
-                                                    </avalonia:Icon.Foreground>
-                                                </avalonia:Icon>
-                                                <Image Source="{Binding ImagePath, Converter={kardamon:DecodedImageSourceConverter}, ConverterParameter=150}"></Image>
-
-                                                <Button Classes="tileButton"
-                                                        Opacity="0"
-                                                            Command="{Binding $parent[ItemsControl].((viewModels:ExplorePageViewModel)DataContext).PlayCommand}"
-                                                            CommandParameter="{Binding .}">
-                                                        <Classes.IsPlaying>
-                                                            <MultiBinding
-                                                                Converter="{valueConverters:IsEqualToConverter}">
-                                                                <Binding Path="." />
-                                                                <Binding
-                                                                    Path="((viewModels:MainViewModel)DataContext).MiniPlayer.Song"
-                                                                    RelativeSource="{RelativeSource AncestorType=views:Main}">
-                                                                </Binding>
-                                                            </MultiBinding>
-                                                        </Classes.IsPlaying>
-                                                        <Button.Styles>
-                                                            <Style Selector="Button.tileButton:pressed">
-                                                                <Setter Property="RenderTransform">
-                                                                    <Rotate3DTransform AngleY="20"
-                                                                            Depth="500">
-                                                                    </Rotate3DTransform>
-                                                                </Setter>
-                                                            </Style>
-                                                            <Style Selector="Button.tileButton:not(.IsPlaying)">
-                                                                <Setter Property="Background" Value="Transparent" />
-                                                            </Style>
-                                                            <Style Selector="Button.tileButton.IsPlaying">
-                                                                <Setter Property="Background" Value="Red" />
-                                                            </Style>
-                                                        </Button.Styles>
-                                                        <Button.Template>
-                                                            <ControlTemplate>
-                                                                <Border Width="71"
-                                                                        Height="71"
-                                                                        CornerRadius="12"
-                                                                        BorderThickness="1"
-                                                                        BorderBrush="Gray"
-                                                                        Background="Black">
-                                                                    <Grid>
-                                                                        <avalonia:Icon FontSize="48"
-                                                                                Value="mdi headphones"
-                                                                                Foreground="#50FFFFFF"
-                                                                                Margin="0,0,0,0" />
-                                                                    </Grid>
-                                                                </Border>
-                                                            </ControlTemplate>
-                                                        </Button.Template>
-                                                    </Button>
-                                                <TextBlock Text="{Binding Name}"
-                                                           VerticalAlignment="Bottom"
-                                                           HorizontalAlignment="Left"
-                                                           TextTrimming="CharacterEllipsis" />
-                                                <Button Classes="tileButton"
-                                                            IsHitTestVisible="False"
-                                                            VerticalAlignment="Bottom"
-                                                            HorizontalAlignment="Right"
-                                                            Margin="8"
-                                                            Command="{Binding $parent[ItemsControl].((viewModels:ExplorePageViewModel)DataContext).PlayCommand}"
-                                                            CommandParameter="{Binding .}">
-                                                        <Button.IsVisible>
-                                                            <MultiBinding
-                                                                Converter="{valueConverters:IsEqualToConverter}">
-                                                                <Binding Path="." />
-                                                                <Binding
-                                                                    Path="((viewModels:MainViewModel)DataContext).MiniPlayer.Song"
-                                                                    RelativeSource="{RelativeSource AncestorType=views:Main}">
-                                                                </Binding>
-                                                            </MultiBinding>
-                                                        </Button.IsVisible>
-                                                        <Button.Styles>
-                                                            <Style Selector="Button.tileButton:pressed">
-                                                                <Setter Property="RenderTransform">
-                                                                    <Rotate3DTransform AngleY="20"
-                                                                            Depth="500">
-                                                                    </Rotate3DTransform>
-                                                                </Setter>
-                                                            </Style>
-                                                        </Button.Styles>
-                                                        <Button.Template>
-                                                            <ControlTemplate>
-                                                                <Border Width="24"
-                                                                        Height="24"
-                                                                        CornerRadius="12"
-
-                                                                        Background="Red">
-                                                                    <Grid>
-                                                                        <avalonia:Icon FontSize="16"
-                                                                                Value="mdi play"
-                                                                                Foreground="#FFF"
-                                                                                Margin="0,0,0,0" />
-                                                                    </Grid>
-                                                                </Border>
-                                                            </ControlTemplate>
-                                                        </Button.Template>
-                                                    </Button>
-                                            </Grid>
-                                        </Border>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
+                                   VerticalAlignment="Center">
+                            <Button Classes="MoreButton"
+                                    DockPanel.Dock="Right">
+                                <avalonia:Icon Value="mdi chevron-right" />
+                            </Button>
+                            <TextBlock Classes="SectionHeader" VerticalAlignment="Center"
+                                       Text="cейчас играет">
+                            </TextBlock>
                         </DockPanel>
+                    </Border>
+                    <Border Background="Transparent">
                         <DockPanel LastChildFill="True"
-                                   Width="{Binding $parent[views:Main].Bounds.Width, Converter={kardamon:PanoramaPageWidthConverter}}">
-                            <TextBlock DockPanel.Dock="Top"
-                                       FontSize="14"
-                                       Margin="0,6"
-                                       FontWeight="SemiBold"
-                                       Text="ПОДБОРКА" />
-                            <ScrollViewer Margin="0,10,0,0"
-                                          VerticalScrollBarVisibility="Hidden">
-                                <ItemsControl ItemsSource="{Binding Tops}">
+                                   Margin="0">
+                            <Border DockPanel.Dock="Left"
+                                    Width="{Binding $self.Bounds.Height}"
+                                    Background="Black">
+                                <Grid>
+                                    <avalonia:Icon FontSize="100"
+                                                   Opacity="0.6"
+                                                   Value="mdi headphones">
+                                    </avalonia:Icon>
+                                    <Image
+                                        Source="{Binding $parent[views:Main].((viewModels:MainViewModel)DataContext).MiniPlayer.Song.Image^}" />
+                                </Grid>
+                            </Border>
+                            <Grid>
+                                <StackPanel VerticalAlignment="Bottom"
+                                            Spacing="16"
+                                            Margin="16">
+                                    <TextBlock FontSize="14"
+                                               Text="{Binding $parent[views:Main].((viewModels:MainViewModel)DataContext).MiniPlayer.Song.Artist}" />
+                                    <TextBlock FontSize="20"
+                                               Text="{Binding $parent[views:Main].((viewModels:MainViewModel)DataContext).MiniPlayer.Song.Name}"
+                                               FontWeight="SemiBold" />
+                                    <DockPanel LastChildFill="True">
+                                        <StackPanel Orientation="Horizontal"
+                                                    Classes="TransportControlsStack">
+                                            <Button Classes="LeftButton"
+                                                    IsVisible="False">
+                                                <avalonia:Icon />
+                                            </Button>
+                                            <Button Classes="CenterButton"
+                                                    Classes.IsPlaying="{Binding $parent[views:Main].((viewModels:MainViewModel)DataContext).MiniPlayer.IsPlaying}">
+                                                <avalonia:Icon />
+                                            </Button>
+                                            <Button Classes="RightButton"
+                                                    IsVisible="False">
+                                                <avalonia:Icon />
+                                            </Button>
+                                        </StackPanel>
+                                        <TextBlock FontSize="14"
+                                                   DockPanel.Dock="Right"
+                                                   VerticalAlignment="Center"
+                                                   Text="{Binding $parent[views:Main].((viewModels:MainViewModel)DataContext).MiniPlayer.CurrentTimeString, FallbackValue=00:00}" />
 
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <DockPanel LastChildFill="True"
-                                                       Margin="0,0,0,6">
-                                                <Grid>
-                                                    <Button Classes="tileButton"
-                                                            Command="{Binding $parent[ItemsControl].((viewModels:ExplorePageViewModel)DataContext).PlayCommand}"
-                                                            CommandParameter="{Binding .}">
-                                                        <Classes.IsPlaying>
-                                                            <MultiBinding
-                                                                Converter="{valueConverters:IsEqualToConverter}">
-                                                                <Binding Path="." />
-                                                                <Binding
-                                                                    Path="((viewModels:MainViewModel)DataContext).MiniPlayer.Song"
-                                                                    RelativeSource="{RelativeSource AncestorType=views:Main}">
-                                                                </Binding>
-                                                            </MultiBinding>
-                                                        </Classes.IsPlaying>
-                                                        <Button.Styles>
-                                                            <Style Selector="Button.tileButton:pressed">
-                                                                <Setter Property="RenderTransform">
-                                                                    <Rotate3DTransform AngleY="20"
-                                                                            Depth="500">
-                                                                    </Rotate3DTransform>
-                                                                </Setter>
-                                                            </Style>
-                                                            <Style Selector="Button.tileButton:not(.IsPlaying)">
-                                                                <Setter Property="Background" Value="Transparent" />
-                                                            </Style>
-                                                            <Style Selector="Button.tileButton.IsPlaying">
-                                                                <Setter Property="Background" Value="Red" />
-                                                            </Style>
-                                                        </Button.Styles>
-                                                        <Button.Template>
-                                                            <ControlTemplate>
-                                                                <Border Width="71"
-                                                                        Height="71"
-                                                                        CornerRadius="12"
-                                                                        BorderThickness="1"
-                                                                        BorderBrush="Gray"
-                                                                        Background="Black">
-                                                                    <Grid>
-                                                                        <avalonia:Icon FontSize="48"
-                                                                                Value="mdi headphones"
-                                                                                Foreground="#50FFFFFF"
-                                                                                Margin="0,0,0,0" />
-                                                                    </Grid>
-                                                                </Border>
-                                                            </ControlTemplate>
-                                                        </Button.Template>
-                                                    </Button>
-                                                    <Button Classes="tileButton"
-                                                            IsHitTestVisible="False"
-                                                            VerticalAlignment="Bottom"
-                                                            HorizontalAlignment="Right"
-                                                            Margin="8"
-                                                            Command="{Binding $parent[ItemsControl].((viewModels:ExplorePageViewModel)DataContext).PlayCommand}"
-                                                            CommandParameter="{Binding .}">
-                                                        <Button.IsVisible>
-                                                            <MultiBinding
-                                                                Converter="{valueConverters:IsEqualToConverter}">
-                                                                <Binding Path="." />
-                                                                <Binding
-                                                                    Path="((viewModels:MainViewModel)DataContext).MiniPlayer.Song"
-                                                                    RelativeSource="{RelativeSource AncestorType=views:Main}">
-                                                                </Binding>
-                                                            </MultiBinding>
-                                                        </Button.IsVisible>
-                                                        <Button.Styles>
-                                                            <Style Selector="Button.tileButton:pressed">
-                                                                <Setter Property="RenderTransform">
-                                                                    <Rotate3DTransform AngleY="20"
-                                                                            Depth="500">
-                                                                    </Rotate3DTransform>
-                                                                </Setter>
-                                                            </Style>
-                                                        </Button.Styles>
-                                                        <Button.Template>
-                                                            <ControlTemplate>
-                                                                <Border Width="24"
-                                                                        Height="24"
-                                                                        CornerRadius="12"
-
-                                                                        Background="Red">
-                                                                    <Grid>
-                                                                        <avalonia:Icon FontSize="16"
-                                                                                Value="mdi play"
-                                                                                Foreground="#FFF"
-                                                                                Margin="0,0,0,0" />
-                                                                    </Grid>
-                                                                </Border>
-                                                            </ControlTemplate>
-                                                        </Button.Template>
-                                                    </Button>
-                                                </Grid>
-                                                <ProgressBar DockPanel.Dock="Bottom"
-                                                             Maximum="{Binding $parent[views:Main].((viewModels:MainViewModel)DataContext).MiniPlayer.TotalTime}"
-                                                             Value="{Binding $parent[views:Main].((viewModels:MainViewModel)DataContext).MiniPlayer.CurrentTime}"
-                                                             Height="4"
-                                                             Margin="18,8"
-                                                             CornerRadius="2"
-                                                             MinHeight="4"
-
-                                                             BorderThickness="0"
-                                                             Foreground="DarkRed"
-                                                             Background="Gray">
-                                                    <ProgressBar.IsVisible>
-                                                        <MultiBinding Converter="{valueConverters:IsEqualToConverter}">
-                                                            <Binding Path="." />
-                                                            <Binding
-                                                                Path="((viewModels:MainViewModel)DataContext).MiniPlayer.Song"
-                                                                RelativeSource="{RelativeSource AncestorType=views:Main}">
-                                                            </Binding>
-                                                        </MultiBinding>
-                                                    </ProgressBar.IsVisible>
-                                                </ProgressBar>
-                                                <StackPanel Margin="16,0"
-                                                            VerticalAlignment="Top">
-                                                    <TextBlock Text="{Binding Name}"
-                                                               VerticalAlignment="Bottom"
-                                                               HorizontalAlignment="Left"
-                                                               TextTrimming="CharacterEllipsis" />
-                                                    <TextBlock Text="{Binding Artist}"
-                                                               VerticalAlignment="Bottom"
-                                                               FontSize="12"
-                                                               Opacity="0.5"
-                                                               HorizontalAlignment="Left"
-                                                               TextTrimming="CharacterEllipsis" />
-                                                    <TextBlock Text="{Binding Time}"
-                                                               VerticalAlignment="Bottom"
-                                                               FontSize="12"
-                                                               Opacity="0.5"
-                                                               HorizontalAlignment="Left"
-                                                               TextTrimming="CharacterEllipsis" />
-
-                                                </StackPanel>
-                                            </DockPanel>
-
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
+                                        <ProgressBar MinHeight="4"
+                                                     Height="4"
+                                                     CornerRadius="0"
+                                                     Background="Gray"
+                                                     Foreground="White"
+                                                     Value="{Binding $parent[views:Main].((viewModels:MainViewModel)DataContext).MiniPlayer.CurrentTime}"
+                                                     MinWidth="40"
+                                                     Maximum="{Binding $parent[views:Main].((viewModels:MainViewModel)DataContext).MiniPlayer.TotalTime}"
+                                                     Margin="16,0">
+                                        </ProgressBar>
+                                    </DockPanel>
+                                </StackPanel>
+                            </Grid>
+                        </DockPanel>
+                    </Border>
+                </DockPanel>
+                <DockPanel LastChildFill="True"
+                           Height="300"
+                           Width="400"
+                           Classes="Section"
+                           VerticalAlignment="Top"
+                           ClipToBounds="True">
+                    <Border Height="48"
+                            DockPanel.Dock="Top"
+                            Background="Transparent">
+                        <DockPanel LastChildFill="True"
+                                   VerticalAlignment="Center">
+                            <Button Classes="MoreButton"
+                                    DockPanel.Dock="Right">
+                                <avalonia:Icon Value="mdi chevron-right" />
+                            </Button>
+                            <TextBlock Classes="SectionHeader" VerticalAlignment="Center" Text="избранное"></TextBlock>
+                        </DockPanel>
+                    </Border>
+                    <Border Background="Transparent">
+                        <DockPanel LastChildFill="True">
+                            <StackPanel Orientation="Horizontal"
+                                        Spacing="20"
+                                        Classes="ListHeadButtons"
+                                        Margin="0,10"
+                                        DockPanel.Dock="Top">
+                                <Button Classes="PlayButton"
+                                        Command="{Binding PlayManyCommand}"
+                                        CommandParameter="{Binding Favorites}">
+                                    <avalonia:Icon Value="mdi play" />
+                                </Button>
+                                <Button Classes="ShuffleButton"
+                                        Command="{Binding ShuffleCommand}">
+                                    <avalonia:Icon Value="mdi shuffle" />
+                                </Button>
+                            </StackPanel>
+                            <ScrollViewer VerticalScrollBarVisibility="Disabled"
+                                          HorizontalScrollBarVisibility="Hidden">
+                                <ItemsControl ItemsSource="{Binding Favorites}"
+                                              ItemTemplate="{DynamicResource ListTileItemTemplate}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <VirtualizingStackPanel Orientation="Horizontal" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
                                 </ItemsControl>
                             </ScrollViewer>
+                        </DockPanel>
+
+                    </Border>
+                </DockPanel>
+                <DockPanel LastChildFill="True"
+                           Classes="Section"
+                           Width="400"
+                           ClipToBounds="True">
+                    <Border Height="48"
+                            DockPanel.Dock="Top"
+                            Background="Transparent">
+                        <DockPanel LastChildFill="True"
+                                   VerticalAlignment="Center">
+                            <Button Classes="MoreButton"
+                                    DockPanel.Dock="Right">
+                                <avalonia:Icon Value="mdi chevron-right" />
+                            </Button>
+                            <TextBlock Classes="SectionHeader" VerticalAlignment="Center"
+                                       Text="предложения">
+                            </TextBlock>
+                        </DockPanel>
+                    </Border>
+                    <Border Background="Transparent">
+                        <DockPanel LastChildFill="True">
+                            <StackPanel Orientation="Horizontal"
+                                        Spacing="20"
+                                        Margin="0,10"
+                                        Classes="ListHeadButtons"
+                                        DockPanel.Dock="Top">
+                                <Button Classes="PlayButton"
+                                        Command="{Binding PlayManyCommand}"
+                                        CommandParameter="{Binding Tops}">
+                                    <avalonia:Icon Value="mdi play" />
+                                </Button>
+                                <Button Classes="ShuffleButton"
+                                        Command="{Binding ShuffleCommand}">
+                                    <avalonia:Icon Value="mdi shuffle" />
+                                </Button>
+                            </StackPanel>
+                            <ScrollViewer>
+                                <ItemsControl ItemsSource="{Binding Tops}"
+                                              ItemTemplate="{DynamicResource TopListItemTemplate}">
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </DockPanel>
+
+                    </Border>
+                </DockPanel>
+            </WrapPanel>
+        </ScrollViewer>
+
+        <Grid x:Name="MobileLayout">
+            <Image Opacity="0.4"
+                   Effect="blur(50)"
+                   Source="{Binding $parent[views:Main].((viewModels:MainViewModel)DataContext).MiniPlayer.Song.Image^}"
+                   Stretch="UniformToFill">
+            </Image>
+            <DockPanel LastChildFill="True"
+                       >
+                <Border DockPanel.Dock="Top"
+                        Height="40"
+                        Background="#20FFFFFF"
+                        Margin="16,0">
+                    <DockPanel LastChildFill="True">
+                        <avalonia:Icon Value="mdi magnify"
+                                       FontSize="20"
+                                       Margin="10,0"
+                                       Foreground="#60FFFFFF" />
+                        <TextBox Background="Transparent"
+                                 x:Name="SearchBox">
+                            <TextBox.KeyBindings>
+                                <KeyBinding Gesture="Return"
+                                            Command="{Binding OpenSearchCommand}"
+                                            CommandParameter="{Binding #SearchBox.Text, UpdateSourceTrigger=PropertyChanged}">
+                                </KeyBinding>
+                            </TextBox.KeyBindings>
+                        </TextBox>
+                    </DockPanel>
+                </Border>
+                <ScrollViewer VerticalScrollBarVisibility="Disabled"
+                              HorizontalScrollBarVisibility="Hidden">
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="40"
+                                Margin="16,0">
+                        <DockPanel LastChildFill="True"
+                                   Width="{Binding $parent[views:ExplorePage].Bounds.Width, Converter={kardamon:PanoramaPageWidthConverter}}"
+                                   IsVisible="{Binding $parent[views:Main].((viewModels:MainViewModel)DataContext).MiniPlayer.Song, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                   Classes="NowPlayingSection">
+                            <Border Height="48"
+                                    DockPanel.Dock="Top"
+                                    Background="Transparent">
+                                <DockPanel LastChildFill="True"
+                                           VerticalAlignment="Center">
+                                    <Button Classes="MoreButton"
+                                            DockPanel.Dock="Right">
+                                        <avalonia:Icon Value="mdi chevron-right" />
+                                    </Button>
+                                    <TextBlock Classes="SectionHeader" VerticalAlignment="Center"
+                                               Text="cейчас играет">
+                                    </TextBlock>
+                                </DockPanel>
+                            </Border>
+                            <Border Background="Transparent">
+                                <DockPanel LastChildFill="True"
+                                           Margin="0">
+                                    <Border DockPanel.Dock="Top"
+                                            Height="{Binding $self.Bounds.Width}"
+                                            Background="Black">
+                                        <Grid>
+                                            <avalonia:Icon FontSize="71"
+                                                           Opacity="0.6"
+                                                           Value="mdi headphones">
+                                            </avalonia:Icon>
+                                            <Image
+                                                Source="{Binding $parent[views:Main].((viewModels:MainViewModel)DataContext).MiniPlayer.Song.Image^}" />
+                                        </Grid>
+                                    </Border>
+                                    <Grid>
+                                        <StackPanel VerticalAlignment="Top"
+                                                    Spacing="20"
+                                                    Margin="16">
+                                            <DockPanel LastChildFill="True">
+                                                <StackPanel Orientation="Horizontal"
+                                                            Classes="TransportControlsStack">
+                                                    <Button Classes="LeftButton"
+                                                            IsVisible="False">
+                                                        <avalonia:Icon />
+                                                    </Button>
+                                                    <Button Classes="CenterButton"
+                                                            Classes.IsPlaying="{Binding $parent[views:Main].((viewModels:MainViewModel)DataContext).MiniPlayer.IsPlaying}">
+                                                        <avalonia:Icon />
+                                                    </Button>
+                                                    <Button Classes="RightButton">
+                                                        <avalonia:Icon />
+                                                    </Button>
+                                                </StackPanel>
+
+                                            </DockPanel>
+                                            <TextBlock FontSize="14"
+                                                       Text="{Binding $parent[views:Main].((viewModels:MainViewModel)DataContext).MiniPlayer.Song.Artist}" />
+                                            <TextBlock FontSize="20"
+                                                       Text="{Binding $parent[views:Main].((viewModels:MainViewModel)DataContext).MiniPlayer.Song.Name}"
+                                                       FontWeight="SemiBold" />
+                                            <TextBlock FontSize="14"
+                                                       Text="{Binding $parent[views:Main].((viewModels:MainViewModel)DataContext).MiniPlayer.CurrentTimeString, FallbackValue=00:00}" />
+                                            <ProgressBar MinHeight="4"
+                                                         Height="4"
+                                                         CornerRadius="0"
+                                                         Background="Gray"
+                                                         Foreground="White"
+                                                         Value="{Binding $parent[views:Main].((viewModels:MainViewModel)DataContext).MiniPlayer.CurrentTime}"
+                                                         MinWidth="40"
+                                                         Maximum="{Binding $parent[views:Main].((viewModels:MainViewModel)DataContext).MiniPlayer.TotalTime}"
+                                                         Margin="0,0">
+                                            </ProgressBar>
+
+                                        </StackPanel>
+                                    </Grid>
+                                </DockPanel>
+                            </Border>
+                        </DockPanel>
+                        <DockPanel LastChildFill="True"
+                                   Classes="Section"
+                                   Width="{Binding $parent[views:ExplorePage].Bounds.Width, Converter={kardamon:PanoramaPageWidthConverter}}"
+                                   ClipToBounds="True">
+                            <Border Height="48"
+                                    DockPanel.Dock="Top"
+                                    Background="Transparent">
+                                <DockPanel LastChildFill="True"
+                                           VerticalAlignment="Center">
+                                    <Button Classes="MoreButton"
+                                            DockPanel.Dock="Right">
+                                        <avalonia:Icon Value="mdi chevron-right" />
+                                    </Button>
+                                    <TextBlock Classes="SectionHeader" VerticalAlignment="Center" Text="избранное"></TextBlock>
+                                </DockPanel>
+                            </Border>
+                            <Border Background="Transparent">
+                                <DockPanel LastChildFill="True">
+                                    <StackPanel Orientation="Horizontal"
+                                                Spacing="20"
+                                                Classes="ListHeadButtons"
+                                                Margin="0,10"
+                                                DockPanel.Dock="Top">
+                                        <Button Classes="PlayButton"
+                                                Command="{Binding PlayManyCommand}"
+                                                CommandParameter="{Binding Favorites}">
+                                            <avalonia:Icon Value="mdi play" />
+                                        </Button>
+                                        <Button Classes="ShuffleButton"
+                                                Command="{Binding ShuffleCommand}">
+                                            <avalonia:Icon Value="mdi shuffle" />
+                                        </Button>
+                                    </StackPanel>
+                                    <ItemsControl ItemsSource="{Binding Favorites}"
+                                                  ItemTemplate="{DynamicResource ListTileItemTemplate}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel ItemSpacing="6"
+                                                           Orientation="Horizontal"
+                                                           LineSpacing="6">
+                                                </WrapPanel>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                    </ItemsControl>
+                                </DockPanel>
+
+                            </Border>
+                        </DockPanel>
+                        <DockPanel LastChildFill="True"
+                                   Classes="Section"
+                                   Width="{Binding $parent[views:ExplorePage].Bounds.Width, Converter={kardamon:PanoramaPageWidthConverter}}"
+                                   ClipToBounds="True">
+                            <Border Height="48"
+                                    DockPanel.Dock="Top"
+                                    Background="Transparent">
+                                <DockPanel LastChildFill="True"
+                                           VerticalAlignment="Center">
+                                    <Button Classes="MoreButton"
+                                            DockPanel.Dock="Right">
+                                        <avalonia:Icon Value="mdi chevron-right" />
+                                    </Button>
+                                    <TextBlock Classes="SectionHeader" VerticalAlignment="Center"
+                                               Text="предложения">
+                                    </TextBlock>
+                                </DockPanel>
+                            </Border>
+                            <Border Background="Transparent">
+                                <DockPanel LastChildFill="True">
+                                    <StackPanel Orientation="Horizontal"
+                                                Spacing="20"
+                                                Margin="0,10"
+                                                Classes="ListHeadButtons"
+                                                DockPanel.Dock="Top">
+                                        <Button Classes="PlayButton"
+                                                Command="{Binding PlayManyCommand}"
+                                                CommandParameter="{Binding Tops}">
+                                            <avalonia:Icon Value="mdi play" />
+                                        </Button>
+                                        <Button Classes="ShuffleButton"
+                                                Command="{Binding ShuffleCommand}">
+                                            <avalonia:Icon Value="mdi shuffle" />
+                                        </Button>
+                                    </StackPanel>
+                                    <ScrollViewer>
+                                        <ItemsControl ItemsSource="{Binding Tops}"
+                                                      ItemTemplate="{DynamicResource TopListItemTemplate}">
+                                        </ItemsControl>
+                                    </ScrollViewer>
+                                </DockPanel>
+                            </Border>
                         </DockPanel>
                     </StackPanel>
                 </ScrollViewer>

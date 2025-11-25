@@ -19,11 +19,10 @@ public static class IoC
         services.RegisterType<CommandBarViewModel>().SingleInstance();
         services.RegisterType<MiniPlayerViewModel>().SingleInstance();
         services.RegisterType<ToastNotificationViewModel>().SingleInstance();
-
-        services.RegisterType<MyMusicPageViewModel>().As<IPage>().SingleInstance();
-        services.RegisterType<IndexPageViewModel>().As<IPage>().SingleInstance();
+        
         services.RegisterType<ExplorePageViewModel>().As<IPage>().SingleInstance();
         services.RegisterType<NowPlayingPageViewModel>().As<IPage>().SingleInstance();
+        services.RegisterType<FavoritesPageViewModel>().As<IPage>().SingleInstance();
         services.RegisterType<SearchPageViewModel>().As<IPage>().SingleInstance();
         
         services.RegisterType<NavigationService>().SingleInstance();

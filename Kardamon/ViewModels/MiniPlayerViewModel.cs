@@ -1,3 +1,5 @@
+using Avalonia.Threading;
+using Kardamon.Factory;
 using Kardamon.Services;
 
 namespace Kardamon.ViewModels;
@@ -5,6 +7,7 @@ namespace Kardamon.ViewModels;
 public partial class MiniPlayerViewModel : ViewModelBase
 {
     private readonly IPlayback _playbackService;
+    private readonly PageFactory _pageFactory;
     private readonly DownloadService _downloadService;
     [ObservableProperty] SongModel _song;
     [ObservableProperty] private long _totalTime;
@@ -15,10 +18,11 @@ public partial class MiniPlayerViewModel : ViewModelBase
     [ObservableProperty] private bool _isActive;
     [ObservableProperty] private ObservableCollection<SongModel> _queue;
 
-    public MiniPlayerViewModel(IPlayback playbackService, DownloadService downloadService)
+    public MiniPlayerViewModel(IPlayback playbackService, DownloadService downloadService, PageFactory pageFactory)
     {
         _playbackService = playbackService;
         _downloadService = downloadService;
+        _pageFactory = pageFactory;
         _playbackService.SongChanged += PlaybackServiceOnSongChanged;
         _playbackService.StateChanged += PlaybackServiceOnStateChanged;
         _playbackService.TimeChanged += PlaybackServiceOnTimeChanged;
@@ -27,9 +31,9 @@ public partial class MiniPlayerViewModel : ViewModelBase
 
     private void PlaybackServiceOnPlayFinished()
     {
-        if (Queue.Any())
+        if (Queue != null && Queue.Any())
         {
-            if (forwardCommand != null) 
+            if (forwardCommand != null && ForwardCommand.CanExecute(null)) 
                 forwardCommand.Execute(null);
         }
         else
@@ -43,22 +47,27 @@ public partial class MiniPlayerViewModel : ViewModelBase
             IsActive = false;
         }
     }
+    
+    
 
     public async Task PlaySingleAsync(SongModel s, bool startsNewQueue = false)
     {
-        if (!s.IsDownloaded)
+        try
         {
-            var file = await _downloadService.DownloadForPreviewAsync(s);
-            s.FilePath = file;
+            await Task.Run(() =>
+            {
+                var file = _downloadService.DownloadForPreviewAsync(s);
+                s.FilePath = file;
+                Song = s;
+                _playbackService.Play(s);
+            });
         }
-
-        if (startsNewQueue)
+        catch (Exception e)
         {
-            Queue =  new ObservableCollection<SongModel>(new List<SongModel>() {s});
+            Console.WriteLine(e);
         }
-
-        Song = s;
-        _playbackService.Play(s);
+        RewindCommand?.NotifyCanExecuteChanged();
+        forwardCommand?.NotifyCanExecuteChanged();
     }
 
     public async Task EnqueueAndPlayAsync(IEnumerable<SongModel> s)
@@ -70,6 +79,11 @@ public partial class MiniPlayerViewModel : ViewModelBase
     private void PlaybackServiceOnStateChanged(bool obj)
     {
         IsPlaying = obj;
+        Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            RewindCommand?.NotifyCanExecuteChanged();
+            forwardCommand?.NotifyCanExecuteChanged();
+        });
     }
 
     private void PlaybackServiceOnTimeChanged(long obj)
@@ -87,6 +101,11 @@ public partial class MiniPlayerViewModel : ViewModelBase
     private void PlaybackServiceOnSongChanged(SongModel? obj)
     {
         Song = obj;
+        Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            RewindCommand?.NotifyCanExecuteChanged();
+            forwardCommand?.NotifyCanExecuteChanged();
+        });
     }
 
     [RelayCommand]
@@ -94,23 +113,46 @@ public partial class MiniPlayerViewModel : ViewModelBase
     {
         _playbackService.Pause();
     }
-    
+
     [RelayCommand]
+    private void TogglePlayPause()
+    {
+        _playbackService.Pause();
+    }
+
+    private bool CsnForward() => Queue != null! && Queue.Any() & Queue.IndexOf(Song) < Queue.Count - 1;
+    [RelayCommand(CanExecute = "CsnForward")]
     private void Forward()
     {
         if (Queue.Any())
         {
+            var nowPl = _pageFactory.GetNowPlayingPage();
             if (Song.Id != Queue.LastOrDefault().Id)
             {
                 var index = Queue.IndexOf(Song);
+                
                 index++;
                 var item = Queue.ElementAt(index);
                 PlaySingleAsync(item);
             }
+            else
+            {
+                if (nowPl.RepeatMode)
+                {
+                    var index = 0;
+                    var item = Queue.ElementAt(index);
+                    PlaySingleAsync(item);
+                }
+            }
         }
     }
     
-    [RelayCommand]
+    private bool CsnRewind()
+    {
+        return Queue != null! && Queue.Any() & Queue.IndexOf(Song) > 0;
+    }
+
+    [RelayCommand(CanExecute = "CsnRewind")]
     private void Rewind()
     {
         if (Queue.Any())

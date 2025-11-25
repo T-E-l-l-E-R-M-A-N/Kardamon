@@ -1,3 +1,5 @@
+using Avalonia.Media.Imaging;
+
 namespace Kardamon.ViewModels;
 
 public  partial class SongModel : ViewModelBase
@@ -8,7 +10,8 @@ public  partial class SongModel : ViewModelBase
     public string Album { get; set; }
     public string Time  { get; set; }
     public string FilePath { get; set; }
-    public string ImagePath { get; set; }
+    public Task<Bitmap?> Image { get; set; }
+    public string ImageSource { get; set; }
     [ObservableProperty] private bool _isDownloaded;
     [ObservableProperty] private bool _isFavorite;
 }

@@ -5,15 +5,15 @@ using Avalonia.Markup.Xaml;
 
 namespace Kardamon.Views;
 
-public partial class CommandBar : UserControl
+public partial class FavoritesPage : UserControl
 {
-    public CommandBar()
+    public FavoritesPage()
     {
         InitializeComponent();
-        
+
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ||
             RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            IsVisible = false;
-        else IsVisible = true;
+            IsVisible = true;
+        else IsVisible = false;
     }
 }

@@ -60,7 +60,6 @@ public sealed class DesktopPLaybackService : IPlayback
                 catch (Exception e)
                 {
                     Console.WriteLine(e);
-                    throw;
                 }
                 SongChanged?.Invoke(s);
                 _player.Play();
@@ -71,7 +70,6 @@ public sealed class DesktopPLaybackService : IPlayback
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                throw;
             }
         }
         else

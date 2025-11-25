@@ -23,6 +23,42 @@ public sealed class ItemsIsNotEmptyConverter : BaseValueConverter
 
     public override object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        throw null!;
+        return null!;
+    }
+}
+
+public sealed class ItemSpacingConverter : BaseValueConverter
+{
+    public override object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (value != null) return -(double)value;
+        return 0;
+    }
+
+    public override object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        return null!;
+    }
+}
+
+public sealed class DistanceCenterConverter : BaseValueConverter
+{
+    public override object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (parameter is string s)
+        {
+            if (!string.IsNullOrEmpty(s))
+            {
+                if (value != null) 
+                    return s == "neg" ? -(double)value : (double)value;
+            }
+        }
+
+        return (double)value;
+    }
+
+    public override object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        return null!;
     }
 }

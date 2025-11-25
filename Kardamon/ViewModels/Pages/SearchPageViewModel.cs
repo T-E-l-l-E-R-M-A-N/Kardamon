@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using Kardamon.Extensions;
 using Kardamon.Services;
 
 namespace Kardamon.ViewModels;
@@ -16,6 +17,8 @@ public partial class SearchPageViewModel : ViewModelBase, IPage
     [ObservableProperty] private ObservableCollection<SongModel>? _resultsOnDevice;
     [ObservableProperty] private string _searchText;
     [ObservableProperty] private string _name;
+    [ObservableProperty] private bool? _contextMenuIsOpen;
+    [ObservableProperty] private SongModel? _contextMenuDataContext;
     public PageType Type => PageType.Search;
     
     public SearchPageViewModel(WebSearchService webSearchService, NotificationService notificationService, MiniPlayerViewModel miniPlayerViewModel, DownloadService downloadService, LibraryService libraryService, NavigationService navigationService)
@@ -26,8 +29,9 @@ public partial class SearchPageViewModel : ViewModelBase, IPage
         _downloadService = downloadService;
         _libraryService = libraryService;
         _navigationService = navigationService;
-        Name = "search";
+        Name = "поиск";
         ResultsInWeb = new ObservableCollection<SongModel>();
+        ResultsOnDevice = new ObservableCollection<SongModel>();
         PropertyChanged += OnPropertyChanged;
     }
 
@@ -57,7 +61,9 @@ public partial class SearchPageViewModel : ViewModelBase, IPage
     private async Task Search()
     {
         var webResults =  await _webSearchService.SearchAsync(SearchText);
-        if (webResults != null) ResultsInWeb = new ObservableCollection<SongModel>(webResults);
+        if (webResults != null) ResultsInWeb = new ObservableCollection<SongModel>(webResults.Where(x=>x.FilePath != null!));
+        var favs = await _webSearchService.GetFavoritesAsync();
+        ResultsOnDevice = new ObservableCollection<SongModel>(favs.Where(x=>x.Name.ToLower().Contains(SearchText.ToLower()) || x.Artist.Contains(SearchText.ToLower())));
     }
     [RelayCommand]
     private async Task MarkFavorite(int id)
@@ -88,5 +94,37 @@ public partial class SearchPageViewModel : ViewModelBase, IPage
     {
         await _miniPlayerViewModel.EnqueueAndPlayAsync(s);
         _navigationService.GoToNowPlaying();
+    }
+
+    [RelayCommand]
+    private void ResetSearch()
+    {
+        ResultsInWeb?.Clear();
+        SearchText = string.Empty;
+        ResultsInWeb = null!;
+    }
+    
+    [RelayCommand]
+    private async Task Shuffle()
+    {
+        if (ResultsInWeb != null && ResultsInWeb.Any())
+        {
+            var shuffle = ResultsInWeb.Shuffle();
+            await _miniPlayerViewModel.EnqueueAndPlayAsync(shuffle);
+        }
+        _navigationService.GoToNowPlaying();
+    }
+    
+    [RelayCommand]
+    private void OpenContextMenu(SongModel s)
+    {
+        ContextMenuIsOpen = true;
+        ContextMenuDataContext = s;
+    } 
+    [RelayCommand]
+    private void DismissContextMenu()
+    {
+        ContextMenuIsOpen = false;
+        ContextMenuDataContext = null!;
     }
 }
